@@ -1,0 +1,3 @@
+spring:
+  application:
+    name: mind_cracker_server_api
