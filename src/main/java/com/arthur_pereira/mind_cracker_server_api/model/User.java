@@ -1,7 +1,10 @@
 package com.arthur_pereira.mind_cracker_server_api.model;
 
 import com.arthur_pereira.mind_cracker_server_api.data.Email;
+import com.arthur_pereira.mind_cracker_server_api.data.Password;
+import com.arthur_pereira.mind_cracker_server_api.data.Usertag;
 import jakarta.persistence.*;
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,20 +19,31 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @Column
-    private String usertag;
+    @Embedded
+    private Usertag usertag;
 
-    @Column
+    @Embedded
     private Email email;
 
-    @Column
+    @Embedded
     private Password password;
 
     @Column
-    private boolean playing;
+    private boolean playing = false;
 
+    public User(Email email, Password password, Usertag usertag) {
+        this.email = email;
+        this.password = password;
+        this.usertag = usertag;
+    }
 
+    public void togglePlayingState() {
+        playing = !playing;
+    }
 
+    public String getUsertag() {
+        return usertag.getValue();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -38,11 +52,13 @@ public class User implements UserDetails {
 
     @Override
     public @Nullable String getPassword() {
-        return "";
+        return password.getValue();
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return email.getValue();
     }
+
+
 }
