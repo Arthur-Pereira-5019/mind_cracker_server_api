@@ -16,5 +16,15 @@ public class CardDeckCategory {
     @Column
     private Deck associatedDeck;
 
+    public GameName getName() {
+        return name;
+    }
 
+    public Deck getAssociatedDeck() {
+        return associatedDeck;
+    }
+
+    public void setName(GameName name) {
+        this.name = name;
+    }
 }

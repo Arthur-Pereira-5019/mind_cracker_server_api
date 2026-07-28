@@ -1,5 +1,6 @@
 package com.arthur_pereira.mind_cracker_server_api.model;
 
+import com.arthur_pereira.mind_cracker_server_api.data.DeckCards;
 import com.arthur_pereira.mind_cracker_server_api.data.DeckType;
 import com.arthur_pereira.mind_cracker_server_api.data.GameName;
 import com.arthur_pereira.mind_cracker_server_api.data.LoadingType;
@@ -25,7 +26,7 @@ public class Deck {
     private ArrayList<CardDeckCategory> deckCategories = new ArrayList<>();
 
     @OneToMany
-    private ArrayList<Card> deckCards = new ArrayList<>();
+    private DeckCards deckCards = new DeckCards();
 
     @Column
     @Enumerated(value = EnumType.ORDINAL)
@@ -34,13 +35,13 @@ public class Deck {
     @Column
     private Board deckBoard = null;
 
-    public LoadingType canBeLoaded(DeckType loadAttempt) {
+    public LoadingType simulateLoading(DeckType loadAttempt) {
         if(loadAttempt == null || loadAttempt == DeckType.OPTIONAL) {
             throw new BadLoadAttempt("Deck type is undefined.");
         } else if(loadAttempt != deckType) {
             throw new BadLoadAttempt("Expected Deck Type doesn't match the actual Deck Type.");
         } else if(loadAttempt == DeckType.LEADERBOARD) {
-            if(!deckCards.isEmpty()) {
+            if(!deckCards.hasEnoughDefaultCards(1)) {
                 return LoadingType.POSSIBLE_LEADERBOARD;
             } else {
                 return LoadingType.IMPOSSIBLE_MISSING_CARDS;
@@ -48,7 +49,7 @@ public class Deck {
         } else {
             if(deckBoard == null) {
                 return LoadingType.IMPOSSIBLE_MISSING_BOARD;
-            } else if(deckCards.size() > deckBoard.getBoardLength()) {
+            } else if(deckCards.hasEnoughDefaultCards(deckBoard.getBoardLength())) {
                 return LoadingType.IMPOSSIBLE_MISSING_CARDS;
             } else {
                 return LoadingType.POSSIBLE_BOARD;
@@ -56,4 +57,39 @@ public class Deck {
         }
     }
 
+    public void associateBoard(Board board) {
+        deckBoard = board;
+    }
+
+    public Board getBoard() {
+        return deckBoard;
+    }
+
+    public GameName getDeckName() {
+        return deckName;
+    }
+
+    public String getDeckNameValue() {
+        return deckName.getValue();
+    }
+
+    public void setDeckName(GameName deckName) {
+        this.deckName = deckName;
+    }
+
+    public User getAuthor() {
+        return deckAuthor;
+    }
+
+    public ArrayList<CardDeckCategory> getDeckCategories() {
+        return deckCategories;
+    }
+
+    public DeckCards getDeckCards() {
+        return deckCards;
+    }
+
+    public Long getDeckId() {
+        return deckId;
+    }
 }
