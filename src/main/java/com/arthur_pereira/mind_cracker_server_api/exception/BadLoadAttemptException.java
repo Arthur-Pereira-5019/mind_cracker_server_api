@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class BadLoadAttempt extends RuntimeException {
-    public BadLoadAttempt(String message) {
+public class BadLoadAttemptException extends RuntimeException {
+    public BadLoadAttemptException(String message) {
         super(message);
     }
 }

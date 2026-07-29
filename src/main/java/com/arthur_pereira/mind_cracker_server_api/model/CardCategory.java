@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table
-public class CardDeckCategory {
+public class CardCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -13,8 +13,12 @@ public class CardDeckCategory {
     @Embedded
     private GameName name;
 
-    @Column
+    @OneToOne
     private Deck associatedDeck;
+
+    public CardCategory(GameName name) {
+        this.name = name;
+    }
 
     public GameName getName() {
         return name;
@@ -26,5 +30,9 @@ public class CardDeckCategory {
 
     public void setName(GameName name) {
         this.name = name;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

@@ -28,12 +28,12 @@ public class Card extends AbstractCard{
     private CardDifficulty cardDifficulty;
 
     @Column
-    private CardDeckCategory cardDeckCategory;
+    private CardCategory cardCategory;
 
 
-    public Card(CardDeckCategory cardDeckCategory, CardDifficulty cardDifficulty, GameName cardTitle, List<String> tips, Deck deck) {
+    public Card(CardCategory cardCategory, CardDifficulty cardDifficulty, GameName cardTitle, List<String> tips, Deck deck) {
         super(deck);
-        this.cardDeckCategory = cardDeckCategory;
+        this.cardCategory = cardCategory;
         this.cardDifficulty = cardDifficulty;
         this.cardTitle = cardTitle;
         this.tips = tips;
@@ -51,13 +51,13 @@ public class Card extends AbstractCard{
         return cardDifficulty;
     }
 
-    public CardDeckCategory getCardDeckCategory() {
-        return cardDeckCategory;
+    public CardCategory getCardDeckCategory() {
+        return cardCategory;
     }
 
-    public void setCardDeckCategory(CardDeckCategory cardDeckCategory) {
-        if(Objects.equals(cardDeckCategory.getAssociatedDeck().getDeckId(), getAssociatedDeck().getDeckId())) {
-            this.cardDeckCategory = cardDeckCategory;
+    public void setCardDeckCategory(CardCategory cardCategory) {
+        if(Objects.equals(cardCategory.getAssociatedDeck().getDeckId(), getAssociatedDeck().getDeckId())) {
+            this.cardCategory = cardCategory;
         } else {
             throw new DomainException("Associated Decks don't match between Deck Category and Card.");
         }

@@ -60,5 +60,8 @@ public class User implements UserDetails {
         return email.getValue();
     }
 
+    public String getId() {
+        return id;
+    }
 
 }

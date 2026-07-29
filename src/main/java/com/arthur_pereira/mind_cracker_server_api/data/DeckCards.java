@@ -2,9 +2,9 @@ package com.arthur_pereira.mind_cracker_server_api.data;
 
 import com.arthur_pereira.mind_cracker_server_api.model.AbstractCard;
 import com.arthur_pereira.mind_cracker_server_api.model.Card;
-import com.arthur_pereira.mind_cracker_server_api.model.CardDeckCategory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.OneToMany;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +12,7 @@ import java.util.List;
 @Embeddable
 public class DeckCards {
     @Column
+    @OneToMany
     private ArrayList<AbstractCard> deckCards = new ArrayList<>();
 
     public DeckCards(ArrayList<AbstractCard> deckCards) {

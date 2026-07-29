@@ -1,20 +1,19 @@
 package com.arthur_pereira.mind_cracker_server_api.controller;
 
 import com.arthur_pereira.mind_cracker_server_api.data.ExceptionResult;
-import com.arthur_pereira.mind_cracker_server_api.exception.BadLoadAttempt;
+import com.arthur_pereira.mind_cracker_server_api.exception.BadLoadAttemptException;
 import com.arthur_pereira.mind_cracker_server_api.exception.DomainException;
+import com.arthur_pereira.mind_cracker_server_api.exception.ResourceNotFoundException;
+import com.arthur_pereira.mind_cracker_server_api.exception.UnauthorizedActionException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.resource.NoResourceFoundException;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Date;
 
@@ -51,10 +50,26 @@ public class ExceptionHandlerController {
                 .body(exceptionResponse);
     }
 
-    @ExceptionHandler(BadLoadAttempt.class)
+    @ExceptionHandler(BadLoadAttemptException.class)
     public final ResponseEntity<ExceptionResult> handleBadLoadAttempt(Exception ex, WebRequest request) {
         ExceptionResult exceptionResponse = new ExceptionResult(ex.getMessage(), new Date(), request.getDescription(false));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(exceptionResponse);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public final ResponseEntity<ExceptionResult> handleResourceNotFound(Exception ex, WebRequest request) {
+        ExceptionResult exceptionResponse = new ExceptionResult(ex.getMessage(), new Date(), request.getDescription(false));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(exceptionResponse);
+    }
+
+    @ExceptionHandler(UnauthorizedActionException.class)
+    public final ResponseEntity<ExceptionResult> handleUnauthorizedAction(Exception ex, WebRequest request) {
+        ExceptionResult exceptionResponse = new ExceptionResult(ex.getMessage(), new Date(), request.getDescription(false));
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(exceptionResponse);
     }

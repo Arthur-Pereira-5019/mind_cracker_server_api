@@ -1,13 +1,8 @@
 package com.arthur_pereira.mind_cracker_server_api.model;
 
-import com.arthur_pereira.mind_cracker_server_api.data.DeckCards;
-import com.arthur_pereira.mind_cracker_server_api.data.DeckType;
-import com.arthur_pereira.mind_cracker_server_api.data.GameName;
-import com.arthur_pereira.mind_cracker_server_api.data.LoadingType;
-import com.arthur_pereira.mind_cracker_server_api.exception.BadLoadAttempt;
+import com.arthur_pereira.mind_cracker_server_api.data.*;
+import com.arthur_pereira.mind_cracker_server_api.exception.BadLoadAttemptException;
 import jakarta.persistence.*;
-
-import java.util.ArrayList;
 
 @Entity
 @Table
@@ -22,10 +17,10 @@ public class Deck {
     @ManyToOne
     private User deckAuthor;
 
-    @OneToMany
-    private ArrayList<CardDeckCategory> deckCategories = new ArrayList<>();
+    @Embedded
+    private CardCategoriesList deckCategories;
 
-    @OneToMany
+    @OneToMany(orphanRemoval = true)
     private DeckCards deckCards = new DeckCards();
 
     @Column
@@ -35,11 +30,17 @@ public class Deck {
     @Column
     private Board deckBoard = null;
 
+    public Deck(User deckAuthor, DeckType deckType, GameName deckName) {
+        this.deckAuthor = deckAuthor;
+        this.deckType = deckType;
+        this.deckName = deckName;
+    }
+
     public LoadingType simulateLoading(DeckType loadAttempt) {
         if(loadAttempt == null || loadAttempt == DeckType.OPTIONAL) {
-            throw new BadLoadAttempt("Deck type is undefined.");
+            throw new BadLoadAttemptException("Deck type is undefined.");
         } else if(loadAttempt != deckType) {
-            throw new BadLoadAttempt("Expected Deck Type doesn't match the actual Deck Type.");
+            throw new BadLoadAttemptException("Expected Deck Type doesn't match the actual Deck Type.");
         } else if(loadAttempt == DeckType.LEADERBOARD) {
             if(!deckCards.hasEnoughDefaultCards(1)) {
                 return LoadingType.POSSIBLE_LEADERBOARD;
@@ -81,8 +82,12 @@ public class Deck {
         return deckAuthor;
     }
 
-    public ArrayList<CardDeckCategory> getDeckCategories() {
+    public CardCategoriesList getDeckCategories() {
         return deckCategories;
+    }
+
+    public void setDeckCategories(CardCategoriesList deckCategories) {
+        this.deckCategories = deckCategories;
     }
 
     public DeckCards getDeckCards() {
