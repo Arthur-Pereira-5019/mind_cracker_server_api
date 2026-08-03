@@ -20,15 +20,18 @@ public class Deck {
     @Embedded
     private CardCategoriesList deckCategories;
 
-    @OneToMany(orphanRemoval = true)
+    @Embedded
     private DeckCards deckCards = new DeckCards();
 
     @Column
     @Enumerated(value = EnumType.ORDINAL)
     private DeckType deckType;
 
-    @Column
+    @OneToOne
     private Board deckBoard = null;
+
+    public Deck() {
+    }
 
     public Deck(User deckAuthor, DeckType deckType, GameName deckName) {
         this.deckAuthor = deckAuthor;

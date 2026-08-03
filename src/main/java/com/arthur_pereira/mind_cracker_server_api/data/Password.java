@@ -14,6 +14,9 @@ public class Password {
         this.password = password;
     }
 
+    public Password() {
+    }
+
     public void validatePassword(String password) {
         if(!(password.matches(".*[a-z].*|.*[a-z]|[a-z].*"))) {
             throw new DomainException("Password must contain at least one lowercase character!");

@@ -2,11 +2,13 @@ package com.arthur_pereira.mind_cracker_server_api.model;
 
 import com.arthur_pereira.mind_cracker_server_api.data.Email;
 import com.arthur_pereira.mind_cracker_server_api.data.Password;
+import com.arthur_pereira.mind_cracker_server_api.data.UserRole;
 import com.arthur_pereira.mind_cracker_server_api.data.Usertag;
 import jakarta.persistence.*;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -20,9 +22,11 @@ public class User implements UserDetails {
     private String id;
 
     @Embedded
+    @Column(unique = true)
     private Usertag usertag;
 
     @Embedded
+    @Column(unique = true)
     private Email email;
 
     @Embedded
@@ -30,6 +34,13 @@ public class User implements UserDetails {
 
     @Column
     private boolean playing = false;
+
+    @Column
+    @Enumerated(value = EnumType.STRING)
+    private UserRole userRole = UserRole.USER;
+
+    public User() {
+    }
 
     public User(Email email, Password password, Usertag usertag) {
         this.email = email;
@@ -47,7 +58,24 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        SimpleGrantedAuthority admin = new SimpleGrantedAuthority("ADMIN");
+        SimpleGrantedAuthority moderator = new SimpleGrantedAuthority("MODERATOR");
+        SimpleGrantedAuthority user = new SimpleGrantedAuthority("USER");
+        SimpleGrantedAuthority suspended = new SimpleGrantedAuthority("SUSPENDED");
+        switch (userRole) {
+            case ADMIN -> {
+                return List.of(admin, moderator, user);
+            }
+            case MODERATOR -> {
+                return List.of(moderator, user);
+            }
+            case SUSPENDED -> {
+                return List.of(suspended);
+            }
+            default -> {
+                return List.of(user);
+            }
+        }
     }
 
     @Override
@@ -62,6 +90,10 @@ public class User implements UserDetails {
 
     public String getId() {
         return id;
+    }
+
+    public void promoteTo(UserRole userRole) {
+        this.userRole = userRole;
     }
 
 }

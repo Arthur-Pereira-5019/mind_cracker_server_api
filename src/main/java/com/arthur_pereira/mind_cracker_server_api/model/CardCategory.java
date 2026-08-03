@@ -16,6 +16,9 @@ public class CardCategory {
     @OneToOne
     private Deck associatedDeck;
 
+    public CardCategory() {
+    }
+
     public CardCategory(GameName name) {
         this.name = name;
     }

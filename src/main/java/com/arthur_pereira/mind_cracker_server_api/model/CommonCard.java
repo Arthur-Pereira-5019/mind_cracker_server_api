@@ -10,8 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table
-public class Card extends AbstractCard{
+public class CommonCard extends AbstractCard{
     @Embedded
     private GameName cardTitle;
 
@@ -27,11 +26,13 @@ public class Card extends AbstractCard{
     @Enumerated(EnumType.ORDINAL)
     private CardDifficulty cardDifficulty;
 
-    @Column
+    @OneToOne
     private CardCategory cardCategory;
 
+    public CommonCard() {
+    }
 
-    public Card(CardCategory cardCategory, CardDifficulty cardDifficulty, GameName cardTitle, List<String> tips, Deck deck) {
+    public CommonCard(CardCategory cardCategory, CardDifficulty cardDifficulty, GameName cardTitle, List<String> tips, Deck deck) {
         super(deck);
         this.cardCategory = cardCategory;
         this.cardDifficulty = cardDifficulty;
@@ -59,7 +60,7 @@ public class Card extends AbstractCard{
         if(Objects.equals(cardCategory.getAssociatedDeck().getDeckId(), getAssociatedDeck().getDeckId())) {
             this.cardCategory = cardCategory;
         } else {
-            throw new DomainException("Associated Decks don't match between Deck Category and Card.");
+            throw new DomainException("Associated Decks don't match between Deck Category and CommonCard.");
         }
     }
 

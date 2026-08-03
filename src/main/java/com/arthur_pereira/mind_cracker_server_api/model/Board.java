@@ -30,6 +30,9 @@ public class Board {
         boardPositions = new BoardPositionType[boardLength];
     }
 
+    public Board() {
+    }
+
     public void setForcedShuffle(boolean forcedShuffle) {
         this.forcedShuffle = forcedShuffle;
     }

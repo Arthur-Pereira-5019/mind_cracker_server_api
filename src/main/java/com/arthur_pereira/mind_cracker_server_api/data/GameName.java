@@ -14,6 +14,9 @@ public class GameName{
         this.gameName = gameName;
     }
 
+    public GameName() {
+    }
+
     private void validateGameName(String gameName) {
         if (!gameName.matches(".{3,255}")) {
             throw new DomainException("Name must have between 8 and 255 digits!");

@@ -24,14 +24,14 @@ public class CardCategoriesList {
         if(cardCategories.size() < 10) {
             cardCategories.add(cardCategory);
         } else {
-            throw new DomainException("Deck's cant have more than 10 Card Categories");
+            throw new DomainException("Deck's cant have more than 10 CommonCard Categories");
         }
     }
 
     public void removeCardCategory(Long id) {
         CardCategory cardCategory = cardCategories.stream().
                 filter(x -> Objects.equals(x.getId(), id)).findFirst().
-                orElseThrow(() -> new ResourceNotFoundException("Couldn't find Card Category with the given Id."));
+                orElseThrow(() -> new ResourceNotFoundException("Couldn't find CommonCard Category with the given Id."));
         cardCategories.remove(cardCategory);
     }
 

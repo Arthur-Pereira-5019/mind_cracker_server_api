@@ -1,10 +1,7 @@
 package com.arthur_pereira.mind_cracker_server_api.controller;
 
 import com.arthur_pereira.mind_cracker_server_api.data.ExceptionResult;
-import com.arthur_pereira.mind_cracker_server_api.exception.BadLoadAttemptException;
-import com.arthur_pereira.mind_cracker_server_api.exception.DomainException;
-import com.arthur_pereira.mind_cracker_server_api.exception.ResourceNotFoundException;
-import com.arthur_pereira.mind_cracker_server_api.exception.UnauthorizedActionException;
+import com.arthur_pereira.mind_cracker_server_api.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -70,6 +67,22 @@ public class ExceptionHandlerController {
     public final ResponseEntity<ExceptionResult> handleUnauthorizedAction(Exception ex, WebRequest request) {
         ExceptionResult exceptionResponse = new ExceptionResult(ex.getMessage(), new Date(), request.getDescription(false));
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(exceptionResponse);
+    }
+
+    @ExceptionHandler(DuplicatedResourceException.class)
+    public final ResponseEntity<ExceptionResult> handleDuplicatedResourceException(Exception ex, WebRequest request) {
+        ExceptionResult exceptionResponse = new ExceptionResult(ex.getMessage(), new Date(), request.getDescription(false));
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(exceptionResponse);
+    }
+
+    @ExceptionHandler(TokenGenerationException.class)
+    public final ResponseEntity<ExceptionResult> handleTokenGenerationException(Exception ex, WebRequest request) {
+        ExceptionResult exceptionResponse = new ExceptionResult(ex.getMessage(), new Date(), request.getDescription(false));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(exceptionResponse);
     }

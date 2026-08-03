@@ -14,6 +14,9 @@ public class Usertag{
         this.usertag = usertag;
     }
 
+    public Usertag() {
+    }
+
     private void validateUsertag(String usertag) {
         if (!usertag.matches(".{8,128}")) {
             throw new DomainException("Usertag must have between 8 and 128 digits!");

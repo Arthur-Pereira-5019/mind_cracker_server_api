@@ -14,6 +14,9 @@ public class Email{
         this.email = email;
     }
 
+    public Email() {
+    }
+
     private void validateEmail(String email) {
         if(email == null) {
             throw new DomainException("Empty E-Mail");
