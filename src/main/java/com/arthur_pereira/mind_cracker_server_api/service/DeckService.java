@@ -38,8 +38,9 @@ public class DeckService {
         return deckRepository.save(deck);
     }
 
-    public void deleteDeckById(Long id) {
+    public void deleteDeckById(Long id, User user) {
         Deck deck = findDeckById(id);
+        havePowerOverDeck(deck, user);
         deckRepository.delete(deck);
     }
 
@@ -62,8 +63,13 @@ public class DeckService {
 
     public void havePowerOverDeck(Deck deck, User user) {
         if(!Objects.equals(deck.getAuthor().getId(), user.getId())) {
+            user.getAuthorities().forEach(x -> {
+                if(Objects.equals(x.getAuthority(), "MODERATOR")) {
+                    return;
+                }
+            });
             throw new UnauthorizedActionException("User is not owner of the Deck nor an Moderator.");
         }
-        //TODO: TEST FOR GRANTED AUTHORITIES
+        throw new UnauthorizedActionException("User is not owner of the Deck nor an Moderator.");
     }
 }

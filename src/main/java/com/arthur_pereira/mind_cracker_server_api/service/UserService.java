@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -52,15 +53,19 @@ public class UserService implements UserDetailsService {
     }
 
     public User findByUsertag(Usertag usertag) {
-        return userRepository.findByUsertag(usertag.getValue()).orElseThrow(() -> new ResourceNotFoundException("Couldn't find User with the provided id."));
+        return userRepository.findByUsertag(usertag).orElseThrow(() -> new ResourceNotFoundException("Couldn't find User with the provided id."));
     }
 
     public User findByEmail(Email email) {
-        return userRepository.findByEmail(email.getValue()).orElseThrow(() -> new ResourceNotFoundException("Couldn't find User with the provided id."));
+        return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Couldn't find User with the provided email."));
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return findByEmail(new Email(username));
+    }
+
+    public User userFromUserDetails(UserDetails userDetails) {
+        return findByEmail(new Email(userDetails.getUsername()));
     }
 }

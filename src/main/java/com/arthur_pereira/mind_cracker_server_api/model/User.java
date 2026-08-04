@@ -52,8 +52,8 @@ public class User implements UserDetails {
         playing = !playing;
     }
 
-    public String getUsertag() {
-        return usertag.getValue();
+    public Usertag getUsertag() {
+        return usertag;
     }
 
     @Override

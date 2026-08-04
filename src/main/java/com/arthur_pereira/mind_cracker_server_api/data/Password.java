@@ -3,6 +3,7 @@ package com.arthur_pereira.mind_cracker_server_api.data;
 import com.arthur_pereira.mind_cracker_server_api.exception.DomainException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Embeddable
 public class Password {
@@ -11,7 +12,7 @@ public class Password {
 
     public Password(String password) {
         validatePassword(password);
-        this.password = password;
+        this.password = encrypt(password);
     }
 
     public Password() {
@@ -41,6 +42,10 @@ public class Password {
 
     public void setValue(String password) {
         validatePassword(password);
-        this.password = password;
+        this.password = encrypt(password);
+    }
+
+    public String encrypt(String rawPassword) {
+        return new BCryptPasswordEncoder().encode(rawPassword);
     }
 }

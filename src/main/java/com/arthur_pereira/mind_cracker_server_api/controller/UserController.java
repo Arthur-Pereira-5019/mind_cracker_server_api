@@ -28,7 +28,7 @@ public class UserController {
     @Autowired
     private TokenService tokenService;
 
-    @PostMapping("/registrar")
+    @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserCreationDTO u, HttpServletResponse response) {
         String rawPassword = u.password();
         userService.createUser(u);

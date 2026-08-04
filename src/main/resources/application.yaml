@@ -2,7 +2,7 @@ spring:
   application:
     name: mind_cracker_server_api
   datasource:
-    url: jdbc:mysql://localhost:3306/kings?useTimezone=true&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/mind_cracker?useTimezone=true&serverTimezone=UTC
     username: root
     password: Art.DB25
     name: com.mysql.cj.jdbc.Driver

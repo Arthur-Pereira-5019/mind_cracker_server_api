@@ -4,6 +4,9 @@ import com.arthur_pereira.mind_cracker_server_api.data.*;
 import com.arthur_pereira.mind_cracker_server_api.exception.BadLoadAttemptException;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table
 public class Deck {
@@ -20,15 +23,18 @@ public class Deck {
     @Embedded
     private CardCategoriesList deckCategories;
 
-    @Embedded
-    private DeckCards deckCards = new DeckCards();
-
     @Column
     @Enumerated(value = EnumType.ORDINAL)
     private DeckType deckType;
 
     @OneToOne
     private Board deckBoard = null;
+
+    @OneToMany(orphanRemoval = true)
+    private List<SpecialCard> deckSpecialCards = new ArrayList<>();
+
+    @OneToMany(orphanRemoval = true)
+    private List<CommonCard> deckCommonCards = new ArrayList<>();
 
     public Deck() {
     }
@@ -45,7 +51,7 @@ public class Deck {
         } else if(loadAttempt != deckType) {
             throw new BadLoadAttemptException("Expected Deck Type doesn't match the actual Deck Type.");
         } else if(loadAttempt == DeckType.LEADERBOARD) {
-            if(!deckCards.hasEnoughDefaultCards(1)) {
+            if(!hasEnoughCommonCards(1)) {
                 return LoadingType.POSSIBLE_LEADERBOARD;
             } else {
                 return LoadingType.IMPOSSIBLE_MISSING_CARDS;
@@ -53,7 +59,7 @@ public class Deck {
         } else {
             if(deckBoard == null) {
                 return LoadingType.IMPOSSIBLE_MISSING_BOARD;
-            } else if(deckCards.hasEnoughDefaultCards(deckBoard.getBoardLength())) {
+            } else if(hasEnoughCommonCards(deckBoard.getBoardLength())) {
                 return LoadingType.IMPOSSIBLE_MISSING_CARDS;
             } else {
                 return LoadingType.POSSIBLE_BOARD;
@@ -73,10 +79,6 @@ public class Deck {
         return deckName;
     }
 
-    public String getDeckNameValue() {
-        return deckName.getValue();
-    }
-
     public void setDeckName(GameName deckName) {
         this.deckName = deckName;
     }
@@ -93,11 +95,31 @@ public class Deck {
         this.deckCategories = deckCategories;
     }
 
-    public DeckCards getDeckCards() {
-        return deckCards;
+    public List<SpecialCard> getDeckSpecialCards() {
+        return deckSpecialCards;
+    }
+
+    public List<CommonCard> getDeckCommonCards() {
+        return deckCommonCards;
+    }
+
+    public void setDeckSpecialCards(ArrayList<SpecialCard> deckSpecialCards) {
+        this.deckSpecialCards = deckSpecialCards;
+    }
+
+    public void setDeckCommonCards(ArrayList<CommonCard> deckCommonCards) {
+        this.deckCommonCards = deckCommonCards;
     }
 
     public Long getDeckId() {
         return deckId;
+    }
+
+    public DeckType getDeckType() {
+        return deckType;
+    }
+
+    public boolean hasEnoughCommonCards(int n) {
+        return deckCommonCards.size() >= n;
     }
 }
