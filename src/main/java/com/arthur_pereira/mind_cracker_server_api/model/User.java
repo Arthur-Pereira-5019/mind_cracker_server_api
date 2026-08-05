@@ -1,11 +1,10 @@
 package com.arthur_pereira.mind_cracker_server_api.model;
 
-import com.arthur_pereira.mind_cracker_server_api.data.Email;
-import com.arthur_pereira.mind_cracker_server_api.data.Password;
-import com.arthur_pereira.mind_cracker_server_api.data.UserRole;
-import com.arthur_pereira.mind_cracker_server_api.data.Usertag;
+import com.arthur_pereira.mind_cracker_server_api.data.user.Email;
+import com.arthur_pereira.mind_cracker_server_api.data.user.Password;
+import com.arthur_pereira.mind_cracker_server_api.data.user.UserRole;
+import com.arthur_pereira.mind_cracker_server_api.data.user.Usertag;
 import jakarta.persistence.*;
-import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table
@@ -96,4 +96,12 @@ public class User implements UserDetails {
         this.userRole = userRole;
     }
 
-}
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof User) {
+            if(Objects.equals(((User) obj).id, this.id)) {
+                return true;
+            }
+        }
+        return false;
+    }}

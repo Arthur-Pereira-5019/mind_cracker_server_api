@@ -1,10 +1,9 @@
 package com.arthur_pereira.mind_cracker_server_api.service;
 
-import com.arthur_pereira.mind_cracker_server_api.data.Email;
-import com.arthur_pereira.mind_cracker_server_api.data.GameName;
-import com.arthur_pereira.mind_cracker_server_api.data.Password;
-import com.arthur_pereira.mind_cracker_server_api.data.Usertag;
-import com.arthur_pereira.mind_cracker_server_api.dto.UserCreationDTO;
+import com.arthur_pereira.mind_cracker_server_api.data.user.Email;
+import com.arthur_pereira.mind_cracker_server_api.data.user.Password;
+import com.arthur_pereira.mind_cracker_server_api.data.user.Usertag;
+import com.arthur_pereira.mind_cracker_server_api.dto.user.UserCreationDTO;
 import com.arthur_pereira.mind_cracker_server_api.exception.DuplicatedResourceException;
 import com.arthur_pereira.mind_cracker_server_api.exception.ResourceNotFoundException;
 import com.arthur_pereira.mind_cracker_server_api.model.User;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 

@@ -1,4 +1,4 @@
-package com.arthur_pereira.mind_cracker_server_api.data;
+package com.arthur_pereira.mind_cracker_server_api.data.user;
 
 import com.arthur_pereira.mind_cracker_server_api.exception.DomainException;
 import jakarta.persistence.Column;

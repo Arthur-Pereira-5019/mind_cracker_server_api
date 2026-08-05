@@ -1,11 +1,10 @@
 package com.arthur_pereira.mind_cracker_server_api.controller;
 
-import com.arthur_pereira.mind_cracker_server_api.dto.UserCreationDTO;
-import com.arthur_pereira.mind_cracker_server_api.dto.UserLoginDTO;
+import com.arthur_pereira.mind_cracker_server_api.dto.user.UserCreationDTO;
+import com.arthur_pereira.mind_cracker_server_api.dto.user.UserLoginDTO;
 import com.arthur_pereira.mind_cracker_server_api.model.User;
 import com.arthur_pereira.mind_cracker_server_api.service.TokenService;
 import com.arthur_pereira.mind_cracker_server_api.service.UserService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

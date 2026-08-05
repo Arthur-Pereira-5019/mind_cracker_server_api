@@ -6,8 +6,8 @@ import jakarta.persistence.*;
 @MappedSuperclass
 public abstract class AbstractCard {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String cardId;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long cardId;
 
     @ManyToOne
     private Deck associatedDeck;
@@ -21,5 +21,9 @@ public abstract class AbstractCard {
     }
 
     public AbstractCard() {
+    }
+
+    public Long getCardId() {
+        return cardId;
     }
 }

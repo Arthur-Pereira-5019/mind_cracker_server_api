@@ -1,7 +1,7 @@
 package com.arthur_pereira.mind_cracker_server_api.model;
 
-import com.arthur_pereira.mind_cracker_server_api.data.CardDifficulty;
-import com.arthur_pereira.mind_cracker_server_api.data.GameName;
+import com.arthur_pereira.mind_cracker_server_api.data.card.CardDifficulty;
+import com.arthur_pereira.mind_cracker_server_api.data.common.GameName;
 import com.arthur_pereira.mind_cracker_server_api.exception.DomainException;
 import jakarta.persistence.*;
 
@@ -32,8 +32,8 @@ public class CommonCard extends AbstractCard{
     public CommonCard() {
     }
 
-    public CommonCard(CardCategory cardCategory, CardDifficulty cardDifficulty, GameName cardTitle, List<String> tips, Deck deck) {
-        super(deck);
+    public CommonCard(CardCategory cardCategory, CardDifficulty cardDifficulty, GameName cardTitle, List<String> tips) {
+        super();
         this.cardCategory = cardCategory;
         this.cardDifficulty = cardDifficulty;
         this.cardTitle = cardTitle;

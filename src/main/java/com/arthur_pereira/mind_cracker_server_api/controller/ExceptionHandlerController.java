@@ -1,6 +1,6 @@
 package com.arthur_pereira.mind_cracker_server_api.controller;
 
-import com.arthur_pereira.mind_cracker_server_api.data.ExceptionResult;
+import com.arthur_pereira.mind_cracker_server_api.data.common.ExceptionResult;
 import com.arthur_pereira.mind_cracker_server_api.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;

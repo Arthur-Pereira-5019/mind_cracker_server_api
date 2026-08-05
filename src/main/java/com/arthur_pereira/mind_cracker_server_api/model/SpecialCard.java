@@ -8,8 +8,6 @@ public class SpecialCard extends AbstractCard{
     @Column(length = 1024)
     private String specialCardDescription;
 
-
-
     /*@Column
     private String<> gameEffects*/
     //TODO: JSON Serializable string for game effects

@@ -1,4 +1,4 @@
-package com.arthur_pereira.mind_cracker_server_api.data;
+package com.arthur_pereira.mind_cracker_server_api.data.deck;
 
 public enum LoadingType {
     IMPOSSIBLE_MISSING_BOARD,

@@ -1,4 +1,4 @@
-package com.arthur_pereira.mind_cracker_server_api.data;
+package com.arthur_pereira.mind_cracker_server_api.data.common;
 
 import java.util.Date;
 

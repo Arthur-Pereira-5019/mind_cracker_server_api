@@ -1,6 +1,10 @@
 package com.arthur_pereira.mind_cracker_server_api.model;
 
-import com.arthur_pereira.mind_cracker_server_api.data.*;
+import com.arthur_pereira.mind_cracker_server_api.data.card.CardCategoriesList;
+import com.arthur_pereira.mind_cracker_server_api.data.common.GameName;
+import com.arthur_pereira.mind_cracker_server_api.data.deck.DeckCommonCards;
+import com.arthur_pereira.mind_cracker_server_api.data.deck.DeckType;
+import com.arthur_pereira.mind_cracker_server_api.data.deck.LoadingType;
 import com.arthur_pereira.mind_cracker_server_api.exception.BadLoadAttemptException;
 import jakarta.persistence.*;
 
@@ -23,6 +27,9 @@ public class Deck {
     @Embedded
     private CardCategoriesList deckCategories;
 
+    @Embedded
+    private DeckCommonCards deckCommonCards;
+
     @Column
     @Enumerated(value = EnumType.ORDINAL)
     private DeckType deckType;
@@ -32,9 +39,6 @@ public class Deck {
 
     @OneToMany(orphanRemoval = true)
     private List<SpecialCard> deckSpecialCards = new ArrayList<>();
-
-    @OneToMany(orphanRemoval = true)
-    private List<CommonCard> deckCommonCards = new ArrayList<>();
 
     public Deck() {
     }
@@ -51,7 +55,7 @@ public class Deck {
         } else if(loadAttempt != deckType) {
             throw new BadLoadAttemptException("Expected Deck Type doesn't match the actual Deck Type.");
         } else if(loadAttempt == DeckType.LEADERBOARD) {
-            if(!hasEnoughCommonCards(1)) {
+            if(deckCommonCards.hasEnoughCommonCards(1)) {
                 return LoadingType.POSSIBLE_LEADERBOARD;
             } else {
                 return LoadingType.IMPOSSIBLE_MISSING_CARDS;
@@ -59,7 +63,7 @@ public class Deck {
         } else {
             if(deckBoard == null) {
                 return LoadingType.IMPOSSIBLE_MISSING_BOARD;
-            } else if(hasEnoughCommonCards(deckBoard.getBoardLength())) {
+            } else if(deckCommonCards.hasEnoughCommonCards(deckBoard.getBoardLength())) {
                 return LoadingType.IMPOSSIBLE_MISSING_CARDS;
             } else {
                 return LoadingType.POSSIBLE_BOARD;
@@ -99,16 +103,8 @@ public class Deck {
         return deckSpecialCards;
     }
 
-    public List<CommonCard> getDeckCommonCards() {
-        return deckCommonCards;
-    }
-
     public void setDeckSpecialCards(ArrayList<SpecialCard> deckSpecialCards) {
         this.deckSpecialCards = deckSpecialCards;
-    }
-
-    public void setDeckCommonCards(ArrayList<CommonCard> deckCommonCards) {
-        this.deckCommonCards = deckCommonCards;
     }
 
     public Long getDeckId() {
@@ -119,7 +115,11 @@ public class Deck {
         return deckType;
     }
 
-    public boolean hasEnoughCommonCards(int n) {
-        return deckCommonCards.size() >= n;
+    public DeckCommonCards getDeckCommonCards() {
+        return deckCommonCards;
+    }
+
+    public void setDeckCommonCards(DeckCommonCards deckCommonCards) {
+        this.deckCommonCards = deckCommonCards;
     }
 }

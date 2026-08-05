@@ -1,4 +1,4 @@
-package com.arthur_pereira.mind_cracker_server_api.data;
+package com.arthur_pereira.mind_cracker_server_api.data.card;
 
 public enum CardDifficulty {
     EASY,

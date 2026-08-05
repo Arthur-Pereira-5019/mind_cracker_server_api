@@ -1,7 +1,7 @@
 package com.arthur_pereira.mind_cracker_server_api.repository;
 
-import com.arthur_pereira.mind_cracker_server_api.data.Email;
-import com.arthur_pereira.mind_cracker_server_api.data.Usertag;
+import com.arthur_pereira.mind_cracker_server_api.data.user.Email;
+import com.arthur_pereira.mind_cracker_server_api.data.user.Usertag;
 import com.arthur_pereira.mind_cracker_server_api.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

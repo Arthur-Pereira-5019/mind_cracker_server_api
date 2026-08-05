@@ -1,7 +1,8 @@
 package com.arthur_pereira.mind_cracker_server_api.model;
 
-import com.arthur_pereira.mind_cracker_server_api.data.BoardPositionType;
+import com.arthur_pereira.mind_cracker_server_api.data.board.BoardPositionType;
 import com.arthur_pereira.mind_cracker_server_api.exception.DomainException;
+import com.arthur_pereira.mind_cracker_server_api.mapper.BoardPositionsMapper;
 import jakarta.persistence.*;
 
 import java.util.Arrays;
@@ -16,13 +17,8 @@ public class Board {
     @Column
     private boolean forcedShuffle;
 
-    @ElementCollection
-    @CollectionTable(
-            name = "board_positions",
-            joinColumns = @JoinColumn(name = "card_id")
-    )
-    @Column(name = "position")
-    @Enumerated(EnumType.ORDINAL)
+    @Convert(converter = BoardPositionsMapper.class)
+    @Column(columnDefinition = "TEXT")
     private BoardPositionType[] boardPositions;
 
     public Board(boolean forcedShuffle, int boardLength) {

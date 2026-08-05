@@ -1,4 +1,4 @@
-package com.arthur_pereira.mind_cracker_server_api.data;
+package com.arthur_pereira.mind_cracker_server_api.data.card;
 
 import com.arthur_pereira.mind_cracker_server_api.exception.DomainException;
 import com.arthur_pereira.mind_cracker_server_api.exception.ResourceNotFoundException;
@@ -8,6 +8,7 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Embeddable
@@ -15,7 +16,7 @@ public class CardCategoriesList {
 
     @Column
     @OneToMany(orphanRemoval = true)
-    private ArrayList<CardCategory> cardCategories = new ArrayList<>();
+    private List<CardCategory> cardCategories = new ArrayList<>();
 
     public CardCategoriesList() {
     }
@@ -35,7 +36,7 @@ public class CardCategoriesList {
         cardCategories.remove(cardCategory);
     }
 
-    public ArrayList<CardCategory> getCardCategories() {
+    public List<CardCategory> getCardCategories() {
         return cardCategories;
     }
 }

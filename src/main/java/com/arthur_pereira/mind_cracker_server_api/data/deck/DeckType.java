@@ -1,7 +1,4 @@
-package com.arthur_pereira.mind_cracker_server_api.data;
-
-import com.arthur_pereira.mind_cracker_server_api.model.Deck;
-import org.springframework.aop.support.DelegatingIntroductionInterceptor;
+package com.arthur_pereira.mind_cracker_server_api.data.deck;
 
 public enum DeckType {
     BOARD_GAME,
