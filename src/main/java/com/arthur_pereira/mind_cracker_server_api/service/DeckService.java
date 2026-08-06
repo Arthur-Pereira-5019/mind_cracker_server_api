@@ -1,20 +1,20 @@
 package com.arthur_pereira.mind_cracker_server_api.service;
 
+import com.arthur_pereira.mind_cracker_server_api.data.board.BoardPositionType;
 import com.arthur_pereira.mind_cracker_server_api.data.card.CardCategoriesList;
 import com.arthur_pereira.mind_cracker_server_api.data.common.GameName;
+import com.arthur_pereira.mind_cracker_server_api.dto.board.BoardCreationDTO;
 import com.arthur_pereira.mind_cracker_server_api.dto.card.CommonCardCreationDTO;
 import com.arthur_pereira.mind_cracker_server_api.dto.deck.DeckCreationDTO;
 import com.arthur_pereira.mind_cracker_server_api.exception.ResourceNotFoundException;
 import com.arthur_pereira.mind_cracker_server_api.exception.UnauthorizedActionException;
-import com.arthur_pereira.mind_cracker_server_api.model.CardCategory;
-import com.arthur_pereira.mind_cracker_server_api.model.CommonCard;
-import com.arthur_pereira.mind_cracker_server_api.model.Deck;
-import com.arthur_pereira.mind_cracker_server_api.model.User;
+import com.arthur_pereira.mind_cracker_server_api.model.*;
 import com.arthur_pereira.mind_cracker_server_api.repository.DeckCategoryRepository;
 import com.arthur_pereira.mind_cracker_server_api.repository.DeckRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -52,7 +52,25 @@ public class DeckService {
                 commonCardCreationDTO.cardDifficulty(),
                 new GameName(commonCardCreationDTO.cardTitle()),
                 commonCardCreationDTO.tips());
-        deck.getDeckCommonCards().addCommonCards(commonCard);
+        deck.getDeckCommonCards().addCommonCards(commonCard, deck);
+        return deckRepository.save(deck);
+    }
+
+    public Deck associateBoardToDeckById(Long id, User user, BoardCreationDTO boardCreationDTO) {
+        Deck deck = getDeckForUpdate(id, user);
+        Board board = new Board(boardCreationDTO.forcedShuffle(),
+                boardCreationDTO.maxBoardLength(),
+                boardCreationDTO.defaultPositionType()
+        );
+        deck.associateBoard(board);
+        return deckRepository.save(deck);
+    }
+
+    public Deck associatePositionsToDeckBoard(Long id, User user, Map<Integer, BoardPositionType> boardPositions) {
+        Deck deck = getDeckForUpdate(id, user);
+        Board board = deck.getBoard();
+        board.setBoardPositions(boardPositions);
+        deck.associateBoard(board);
         return deckRepository.save(deck);
     }
 

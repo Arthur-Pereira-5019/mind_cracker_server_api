@@ -1,6 +1,7 @@
 package com.arthur_pereira.mind_cracker_server_api.data.deck;
 
 import com.arthur_pereira.mind_cracker_server_api.model.CommonCard;
+import com.arthur_pereira.mind_cracker_server_api.model.Deck;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
@@ -25,10 +26,11 @@ public class DeckCommonCards {
         return deckCommonCards.size() >= n;
     }
 
-    public void addCommonCards(CommonCard commonCard) {
+    public void addCommonCards(CommonCard commonCard, Deck ownerDeck) {
         if(deckCommonCards.size() >= 300) {
             throw new RuntimeException("Deck can't have more than 300 cards");
         }
+        commonCard.setAssociatedDeck(ownerDeck);
         deckCommonCards.add(commonCard);
     }
 }

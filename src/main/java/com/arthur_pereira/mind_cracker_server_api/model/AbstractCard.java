@@ -10,6 +10,7 @@ public abstract class AbstractCard {
     private Long cardId;
 
     @ManyToOne
+    @JoinColumn(name = "deck_id")
     private Deck associatedDeck;
 
     public AbstractCard(Deck associatedDeck) {
@@ -18,6 +19,10 @@ public abstract class AbstractCard {
 
     public Deck getAssociatedDeck() {
         return associatedDeck;
+    }
+
+    public void setAssociatedDeck(Deck associatedDeck) {
+        this.associatedDeck = associatedDeck;
     }
 
     public AbstractCard() {

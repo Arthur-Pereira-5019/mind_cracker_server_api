@@ -5,7 +5,8 @@ import com.arthur_pereira.mind_cracker_server_api.exception.DomainException;
 import com.arthur_pereira.mind_cracker_server_api.mapper.BoardPositionsMapper;
 import jakarta.persistence.*;
 
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @Entity
 @Table
@@ -17,13 +18,24 @@ public class Board {
     @Column
     private boolean forcedShuffle;
 
+    @Column
+    private BoardPositionType defaultPositionType = BoardPositionType.EASY;
+
     @Convert(converter = BoardPositionsMapper.class)
     @Column(columnDefinition = "TEXT")
-    private BoardPositionType[] boardPositions;
+    private Map<Integer, BoardPositionType> boardPositions = new HashMap<>();
 
-    public Board(boolean forcedShuffle, int boardLength) {
+    @Column
+    private int maxBoardLength;
+
+    @ManyToOne
+    @JoinColumn(name = "deck_id")
+    private Deck associatedDeck;
+
+    public Board(boolean forcedShuffle, int maxBoardLength, BoardPositionType defaultPositionType) {
+        this.maxBoardLength = maxBoardLength;
         this.forcedShuffle = forcedShuffle;
-        boardPositions = new BoardPositionType[boardLength];
+        this.defaultPositionType = defaultPositionType;
     }
 
     public Board() {
@@ -34,22 +46,32 @@ public class Board {
     }
 
     public void setBoardLength(int boardLength) {
-        boardPositions = Arrays.copyOf(boardPositions,boardLength);
+        boardPositions.keySet().stream().filter((x -> (x > boardLength))).
+                forEach(y -> boardPositions.remove(y));
     }
 
-    public void setBoardPositionType(int position, BoardPositionType type) {
-        if(position > boardPositions.length || position < 0) {
-            throw new DomainException("Postion out of the Board length.");
+    public void setBoardPositions(Map<Integer, BoardPositionType> boardPositions) {
+        for(Integer i: boardPositions.keySet()) {
+            if(i > maxBoardLength || i < 0) {
+                throw new DomainException("One or more given positions outside of the board range of [0," + maxBoardLength+"]");
+            }
         }
-        boardPositions[position] = type;
+        this.boardPositions = boardPositions;
+    }
+
+    public void setDefaultPositionType(BoardPositionType boardPositionType) {
+        this.defaultPositionType = boardPositionType;
     }
 
     public boolean isShuffleForced() {
         return forcedShuffle;
     }
 
-    public int getBoardLength() {
-        return boardPositions.length;
+    public int getMaxBoardLength() {
+        return maxBoardLength;
     }
 
+    public void setAssociatedDeck(Deck associatedDeck) {
+        this.associatedDeck = associatedDeck;
+    }
 }

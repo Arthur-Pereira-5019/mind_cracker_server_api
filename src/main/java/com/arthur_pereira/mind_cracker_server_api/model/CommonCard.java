@@ -71,4 +71,6 @@ public class CommonCard extends AbstractCard{
     public void setCardTitle(GameName cardTitle) {
         this.cardTitle = cardTitle;
     }
+
+
 }

@@ -16,6 +16,4 @@ public record DeckCompleteExhibitionDTO(Long deckId,
                                         List<SpecialCardSimpleExhibitionDTO> deckSpecialCards,
                                         List<CommonCardSimpleExhibitionDTO> deckCommonCards,
                                         List<CardCategory> deckCardCategories
-)
-{
-}
+) { }

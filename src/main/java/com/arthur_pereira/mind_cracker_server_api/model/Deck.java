@@ -34,7 +34,11 @@ public class Deck {
     @Enumerated(value = EnumType.ORDINAL)
     private DeckType deckType;
 
-    @OneToOne
+    @OneToOne(
+            mappedBy = "associatedDeck",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     private Board deckBoard = null;
 
     @OneToMany(orphanRemoval = true)
@@ -63,7 +67,7 @@ public class Deck {
         } else {
             if(deckBoard == null) {
                 return LoadingType.IMPOSSIBLE_MISSING_BOARD;
-            } else if(deckCommonCards.hasEnoughCommonCards(deckBoard.getBoardLength())) {
+            } else if(deckCommonCards.hasEnoughCommonCards(deckBoard.getMaxBoardLength())) {
                 return LoadingType.IMPOSSIBLE_MISSING_CARDS;
             } else {
                 return LoadingType.POSSIBLE_BOARD;
@@ -73,6 +77,7 @@ public class Deck {
 
     public void associateBoard(Board board) {
         deckBoard = board;
+        board.setAssociatedDeck(this);
     }
 
     public Board getBoard() {

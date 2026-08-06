@@ -58,10 +58,10 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority admin = new SimpleGrantedAuthority("ADMIN");
-        SimpleGrantedAuthority moderator = new SimpleGrantedAuthority("MODERATOR");
-        SimpleGrantedAuthority user = new SimpleGrantedAuthority("USER");
-        SimpleGrantedAuthority suspended = new SimpleGrantedAuthority("SUSPENDED");
+        SimpleGrantedAuthority admin = new SimpleGrantedAuthority("ROLE_ADMIN");
+        SimpleGrantedAuthority moderator = new SimpleGrantedAuthority("ROLE_MODERATOR");
+        SimpleGrantedAuthority user = new SimpleGrantedAuthority("ROLE_USER");
+        SimpleGrantedAuthority suspended = new SimpleGrantedAuthority("ROLE_SUSPENDED");
         switch (userRole) {
             case ADMIN -> {
                 return List.of(admin, moderator, user);
