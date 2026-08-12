@@ -19,7 +19,7 @@ public class GameName{
 
     private void validateGameName(String gameName) {
         if (!gameName.matches(".{3,255}")) {
-            throw new DomainException("Name must have between 8 and 255 digits!");
+            throw new DomainException("Name must have between 3 and 255 digits!");
         }
     }
 

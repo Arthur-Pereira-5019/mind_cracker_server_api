@@ -4,12 +4,14 @@ import com.arthur_pereira.mind_cracker_server_api.data.card.CardDifficulty;
 import com.arthur_pereira.mind_cracker_server_api.data.common.GameName;
 import com.arthur_pereira.mind_cracker_server_api.exception.DomainException;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Audited;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
+@Audited
 public class CommonCard extends AbstractCard{
     @Embedded
     private GameName cardTitle;

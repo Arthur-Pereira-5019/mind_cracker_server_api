@@ -7,12 +7,14 @@ import com.arthur_pereira.mind_cracker_server_api.data.deck.DeckType;
 import com.arthur_pereira.mind_cracker_server_api.data.deck.LoadingType;
 import com.arthur_pereira.mind_cracker_server_api.exception.BadLoadAttemptException;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Audited;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table
+@Audited
 public class Deck {
     @Id
     @GeneratedValue

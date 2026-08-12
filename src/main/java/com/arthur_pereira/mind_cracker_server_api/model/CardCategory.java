@@ -2,9 +2,10 @@ package com.arthur_pereira.mind_cracker_server_api.model;
 
 import com.arthur_pereira.mind_cracker_server_api.data.common.GameName;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Audited;
 
 @Entity
-@Table
+@Audited
 public class CardCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

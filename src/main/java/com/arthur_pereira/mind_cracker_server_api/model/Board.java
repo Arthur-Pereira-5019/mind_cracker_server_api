@@ -4,12 +4,14 @@ import com.arthur_pereira.mind_cracker_server_api.data.board.BoardPositionType;
 import com.arthur_pereira.mind_cracker_server_api.exception.DomainException;
 import com.arthur_pereira.mind_cracker_server_api.mapper.BoardPositionsMapper;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Audited;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Entity
 @Table
+@Audited
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

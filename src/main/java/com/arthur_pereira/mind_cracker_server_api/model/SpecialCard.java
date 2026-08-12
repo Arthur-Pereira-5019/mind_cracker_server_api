@@ -2,7 +2,9 @@ package com.arthur_pereira.mind_cracker_server_api.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import org.hibernate.annotations.Audited;
 
+@Audited
 @Entity
 public class SpecialCard extends AbstractCard{
     @Column(length = 1024)

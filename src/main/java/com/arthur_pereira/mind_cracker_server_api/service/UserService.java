@@ -6,9 +6,12 @@ import com.arthur_pereira.mind_cracker_server_api.data.user.Usertag;
 import com.arthur_pereira.mind_cracker_server_api.dto.user.UserCreationDTO;
 import com.arthur_pereira.mind_cracker_server_api.exception.DuplicatedResourceException;
 import com.arthur_pereira.mind_cracker_server_api.exception.ResourceNotFoundException;
+import com.arthur_pereira.mind_cracker_server_api.exception.UnableToJoinMatchException;
+import com.arthur_pereira.mind_cracker_server_api.exception.UnauthorizedActionException;
 import com.arthur_pereira.mind_cracker_server_api.model.User;
 import com.arthur_pereira.mind_cracker_server_api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -44,6 +47,17 @@ public class UserService implements UserDetailsService {
             throw new DuplicatedResourceException("The given E-Mail is already being used.");
         }
         throw new DuplicatedResourceException("The given Usertag is already being used.");
+    }
+
+    public User attemptToJoin(User user) {
+        if(user.isPlaying()) {
+            throw new UnableToJoinMatchException("Already on a Match.");
+        }
+        if(user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_SUSPENDED"))) {
+            throw new UnauthorizedActionException("Can't play while suspended");
+        }
+        user.setPlaying(true);
+        return userRepository.save(user);
     }
 
     public User findById(String id) {

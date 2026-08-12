@@ -87,6 +87,14 @@ public class ExceptionHandlerController {
                 .body(exceptionResponse);
     }
 
+    @ExceptionHandler(UnableToJoinMatchException.class)
+    public final ResponseEntity<ExceptionResult> handleUnableToJoinMatchException(Exception ex, WebRequest request) {
+        ExceptionResult exceptionResponse = new ExceptionResult(ex.getMessage(), new Date(), request.getDescription(false));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(exceptionResponse);
+    }
+
 
 
 }
