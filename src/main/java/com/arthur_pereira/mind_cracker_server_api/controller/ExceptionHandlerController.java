@@ -2,6 +2,7 @@ package com.arthur_pereira.mind_cracker_server_api.controller;
 
 import com.arthur_pereira.mind_cracker_server_api.data.common.ExceptionResult;
 import com.arthur_pereira.mind_cracker_server_api.exception.*;
+import com.arthur_pereira.mind_cracker_server_api.exception.match.InexistingPlayerPosition;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -89,6 +90,14 @@ public class ExceptionHandlerController {
 
     @ExceptionHandler(UnableToJoinMatchException.class)
     public final ResponseEntity<ExceptionResult> handleUnableToJoinMatchException(Exception ex, WebRequest request) {
+        ExceptionResult exceptionResponse = new ExceptionResult(ex.getMessage(), new Date(), request.getDescription(false));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(exceptionResponse);
+    }
+
+    @ExceptionHandler(InexistingPlayerPosition.class)
+    public final ResponseEntity<ExceptionResult> handleInexistingPlayerPosition(Exception ex, WebRequest request) {
         ExceptionResult exceptionResponse = new ExceptionResult(ex.getMessage(), new Date(), request.getDescription(false));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
