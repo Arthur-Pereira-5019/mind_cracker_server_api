@@ -5,11 +5,11 @@ import com.arthur_pereira.mind_cracker_server_api.data.card.CardCategoriesList;
 import com.arthur_pereira.mind_cracker_server_api.data.common.GameName;
 import com.arthur_pereira.mind_cracker_server_api.dto.board.BoardCreationDTO;
 import com.arthur_pereira.mind_cracker_server_api.dto.card.CommonCardCreationDTO;
+import com.arthur_pereira.mind_cracker_server_api.dto.common.SimpleNamedEntityDTO;
 import com.arthur_pereira.mind_cracker_server_api.dto.deck.DeckCreationDTO;
 import com.arthur_pereira.mind_cracker_server_api.exception.ResourceNotFoundException;
 import com.arthur_pereira.mind_cracker_server_api.exception.UnauthorizedActionException;
 import com.arthur_pereira.mind_cracker_server_api.model.*;
-import com.arthur_pereira.mind_cracker_server_api.repository.DeckCategoryRepository;
 import com.arthur_pereira.mind_cracker_server_api.repository.DeckRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class DeckService {
     private CardCategoryService cardCategoryService;
 
     @Autowired
-    private DeckCategoryRepository deckCategoryRepository;
+    private CommonCardService commonCardService;
 
     public Deck createDeck(DeckCreationDTO deckCreationDTO, User deckAuthor) {
         GameName deckName = new GameName(deckCreationDTO.deckName());
@@ -34,24 +34,17 @@ public class DeckService {
         return deckRepository.save(deck);
     }
 
-    public Deck addCategoryToDeck(Long id, User user, CardCategory cardCategory) {
+    public Deck addCategoryToDeck(Long id, User user, SimpleNamedEntityDTO simpleNamedEntityDTO) {
         Deck deck = getDeckForUpdate(id, user);
         CardCategoriesList cardCategoriesList = deck.getDeckCategories();
-        cardCategoriesList.addCardCategory(cardCategory);
+        cardCategoriesList.addCardCategory(new CardCategory(new GameName(simpleNamedEntityDTO.name())));
         deck.setDeckCategories(cardCategoriesList);
         return deckRepository.save(deck);
     }
 
     public Deck addCardToDeck(Long id, User user, CommonCardCreationDTO commonCardCreationDTO) {
         Deck deck = getDeckForUpdate(id, user);
-        CardCategory cardCategory = null;
-        if(commonCardCreationDTO.cardCategoryId() != null) {
-            cardCategory = cardCategoryService.findCardCategoryById(commonCardCreationDTO.cardCategoryId());
-        }
-        CommonCard commonCard = new CommonCard(cardCategory,
-                commonCardCreationDTO.cardDifficulty(),
-                new GameName(commonCardCreationDTO.cardTitle()),
-                commonCardCreationDTO.tips());
+        CommonCard commonCard = commonCardService.createCommonCard(commonCardCreationDTO);
         deck.getDeckCommonCards().addCommonCards(commonCard, deck);
         return deckRepository.save(deck);
     }
@@ -89,7 +82,7 @@ public class DeckService {
         return deck;
     }
 
-    public void setDeckName(Long id, String name, User user) {
+    public void updateDeckName(Long id, String name, User user) {
         Deck deck = getDeckForUpdate(id, user);
         GameName deckName = new GameName(name);
         deck.setDeckName(deckName);
@@ -105,6 +98,5 @@ public class DeckService {
             });
             throw new UnauthorizedActionException("User is not owner of the Deck nor an Moderator.");
         }
-        return;
     }
 }

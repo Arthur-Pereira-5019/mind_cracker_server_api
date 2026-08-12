@@ -3,6 +3,7 @@ package com.arthur_pereira.mind_cracker_server_api.data.card;
 import com.arthur_pereira.mind_cracker_server_api.exception.DomainException;
 import com.arthur_pereira.mind_cracker_server_api.exception.ResourceNotFoundException;
 import com.arthur_pereira.mind_cracker_server_api.model.CardCategory;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
@@ -15,7 +16,10 @@ import java.util.Objects;
 public class CardCategoriesList {
 
     @Column
-    @OneToMany(orphanRemoval = true)
+    @OneToMany(
+            mappedBy = "associatedDeck",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<CardCategory> cardCategories = new ArrayList<>();
 
     public CardCategoriesList() {
