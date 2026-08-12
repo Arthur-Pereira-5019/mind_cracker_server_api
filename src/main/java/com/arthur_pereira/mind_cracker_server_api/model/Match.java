@@ -1,6 +1,8 @@
 package com.arthur_pereira.mind_cracker_server_api.model;
 
 import com.arthur_pereira.mind_cracker_server_api.data.deck.DeckType;
+import com.arthur_pereira.mind_cracker_server_api.data.match.MatchPlayers;
+import com.arthur_pereira.mind_cracker_server_api.exception.DomainException;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -12,11 +14,8 @@ public class Match {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long matchId;
 
-    @OneToMany(
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private List<RunningPlayer> matchPlayers = new ArrayList<>();
+    @Embedded
+    private MatchPlayers matchPlayers = new MatchPlayers();
 
     @Column
     private String matchPassword = "";
@@ -45,9 +44,6 @@ public class Match {
     private List<Integer> gameCurrentCardTips = new ArrayList<>();
 
     @Column
-    private int matchPlayerPointer = 0;
-
-    @Column
     private int matchDeckVersion;
 
     @Column
@@ -56,11 +52,18 @@ public class Match {
     @Column
     private boolean started = false;
 
-    public Match(Deck matchDeck, int matchDeckVersion, String matchPassword, RunningPlayer matchConductor) {
+    public Match(Deck matchDeck, int matchDeckVersion, String matchPassword, RunningPlayer matchConductor, DeckType matchType) {
         this.matchDeck = matchDeck;
         this.matchDeckVersion = matchDeckVersion;
         this.matchPassword = matchPassword;
-        matchPlayers.add(matchConductor);
+        matchPlayers.addRunningPlayer(matchConductor);
+        if(matchType == DeckType.OPTIONAL) {
+            throw new DomainException("Match must have a defined type!");
+        }
+    }
+
+    public MatchPlayers getMatchPlayers() {
+        return matchPlayers;
     }
 
     public void start() {
@@ -71,11 +74,13 @@ public class Match {
         return started;
     }
 
-    public void addRunningPlayer(RunningPlayer runningPlayer) {
-        this.matchPlayers.add(runningPlayer);
+
+
+    public String getMatchPassword() {
+        return matchPassword;
     }
 
-    public void removeRunningPlayer(RunningPlayer runningPlayer) {
-        this.matchPlayers.remove(runningPlayer);
+    public DeckType getMatchType() {
+        return matchType;
     }
 }
