@@ -1,14 +1,12 @@
 package com.arthur_pereira.mind_cracker_server_api.service;
 
+import com.arthur_pereira.mind_cracker_server_api.data.board.BoardPositionType;
 import com.arthur_pereira.mind_cracker_server_api.data.deck.DeckType;
 import com.arthur_pereira.mind_cracker_server_api.dto.match.CreateMatchDTO;
 import com.arthur_pereira.mind_cracker_server_api.dto.match.JoinMatchDTO;
-import com.arthur_pereira.mind_cracker_server_api.exception.ResourceNotFoundException;
-import com.arthur_pereira.mind_cracker_server_api.exception.UnableToJoinMatchException;
-import com.arthur_pereira.mind_cracker_server_api.model.Deck;
-import com.arthur_pereira.mind_cracker_server_api.model.Match;
-import com.arthur_pereira.mind_cracker_server_api.model.RunningPlayer;
-import com.arthur_pereira.mind_cracker_server_api.model.User;
+import com.arthur_pereira.mind_cracker_server_api.exception.common.ResourceNotFoundException;
+import com.arthur_pereira.mind_cracker_server_api.exception.match.UnableToJoinMatchException;
+import com.arthur_pereira.mind_cracker_server_api.model.*;
 import com.arthur_pereira.mind_cracker_server_api.repository.MatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -58,7 +56,20 @@ public class MatchService {
     }
 
     public Match nextRoundBoard(Match match) {
-        match.incrementMatchPlayerPointer();
+        match.resetUsedCardTips();
+
+        int positionOfTheFrontPlayer = match.getMatchPlayers().getCurrentPlayer().getScore();
+
+        BoardPositionType boardPositionType =
+                match.getMatchDeck().getBoard().getPositionTypeAt(positionOfTheFrontPlayer);
+
+        if(boardPositionType.isACardDifficulty()) {
+            CommonCard card = match.getMatchDeck().shuffleCommonCardOfType(boardPositionType.toCardDifficulty(), match.getGameUsedCards());
+            match.getGameUsedCards().add(card.getCardId());
+            match.setCurrentCardId(card.getCardId());
+        } else {
+
+        }
         return match;
     }
 

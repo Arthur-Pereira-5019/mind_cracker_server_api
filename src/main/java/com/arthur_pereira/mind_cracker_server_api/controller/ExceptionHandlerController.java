@@ -1,8 +1,11 @@
 package com.arthur_pereira.mind_cracker_server_api.controller;
 
 import com.arthur_pereira.mind_cracker_server_api.data.common.ExceptionResult;
-import com.arthur_pereira.mind_cracker_server_api.exception.*;
+import com.arthur_pereira.mind_cracker_server_api.exception.common.*;
 import com.arthur_pereira.mind_cracker_server_api.exception.match.InexistingPlayerPosition;
+import com.arthur_pereira.mind_cracker_server_api.exception.match.UnableToJoinMatchException;
+import com.arthur_pereira.mind_cracker_server_api.exception.security.TokenGenerationException;
+import com.arthur_pereira.mind_cracker_server_api.exception.security.UnauthorizedActionException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -100,6 +103,14 @@ public class ExceptionHandlerController {
     public final ResponseEntity<ExceptionResult> handleInexistingPlayerPosition(Exception ex, WebRequest request) {
         ExceptionResult exceptionResponse = new ExceptionResult(ex.getMessage(), new Date(), request.getDescription(false));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(exceptionResponse);
+    }
+
+    @ExceptionHandler(ImpossibleConversionException.class)
+    public final ResponseEntity<ExceptionResult> handleImpossibleConversionException(Exception ex, WebRequest request) {
+        ExceptionResult exceptionResponse = new ExceptionResult(ex.getMessage(), new Date(), request.getDescription(false));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(exceptionResponse);
     }

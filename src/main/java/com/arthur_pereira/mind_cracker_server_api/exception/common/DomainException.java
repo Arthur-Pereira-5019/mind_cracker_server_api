@@ -1,11 +1,11 @@
-package com.arthur_pereira.mind_cracker_server_api.exception;
+package com.arthur_pereira.mind_cracker_server_api.exception.common;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class TokenGenerationException extends RuntimeException {
-    public TokenGenerationException(String message) {
+public class DomainException extends RuntimeException {
+    public DomainException(String message) {
         super(message);
     }
 }

@@ -1,12 +1,11 @@
 package com.arthur_pereira.mind_cracker_server_api.service;
 
-import com.arthur_pereira.mind_cracker_server_api.exception.TokenGenerationException;
-import jakarta.servlet.http.Cookie;
-import org.springframework.security.core.userdetails.UserDetails;
-
+import com.arthur_pereira.mind_cracker_server_api.exception.security.TokenGenerationException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import jakarta.servlet.http.Cookie;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

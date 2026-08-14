@@ -1,6 +1,6 @@
 package com.arthur_pereira.mind_cracker_server_api.service;
 
-import com.arthur_pereira.mind_cracker_server_api.exception.ResourceNotFoundException;
+import com.arthur_pereira.mind_cracker_server_api.exception.common.ResourceNotFoundException;
 import com.arthur_pereira.mind_cracker_server_api.model.CardCategory;
 import com.arthur_pereira.mind_cracker_server_api.repository.CardCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;

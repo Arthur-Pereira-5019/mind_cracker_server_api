@@ -1,6 +1,6 @@
 package com.arthur_pereira.mind_cracker_server_api.data.user;
 
-import com.arthur_pereira.mind_cracker_server_api.exception.DomainException;
+import com.arthur_pereira.mind_cracker_server_api.exception.common.DomainException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

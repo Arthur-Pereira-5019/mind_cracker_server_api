@@ -1,7 +1,7 @@
 package com.arthur_pereira.mind_cracker_server_api.model;
 
 import com.arthur_pereira.mind_cracker_server_api.data.board.BoardPositionType;
-import com.arthur_pereira.mind_cracker_server_api.exception.DomainException;
+import com.arthur_pereira.mind_cracker_server_api.exception.common.DomainException;
 import com.arthur_pereira.mind_cracker_server_api.mapper.BoardPositionsMapper;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Audited;
@@ -57,12 +57,23 @@ public class Board {
             if(i > maxBoardLength || i < 0) {
                 throw new DomainException("One or more given positions outside of the board range of [0," + maxBoardLength+"]");
             }
+            //Sanitization of redundant positions;
+            if(boardPositions.get(i) == defaultPositionType) {
+                boardPositions.remove(i);
+            }
         }
         this.boardPositions = boardPositions;
     }
 
     public void setDefaultPositionType(BoardPositionType boardPositionType) {
         this.defaultPositionType = boardPositionType;
+    }
+
+    public BoardPositionType getPositionTypeAt(int position) {
+        if(boardPositions.containsKey(position)) {
+            return boardPositions.get(position);
+        }
+        return defaultPositionType;
     }
 
     public boolean isShuffleForced() {

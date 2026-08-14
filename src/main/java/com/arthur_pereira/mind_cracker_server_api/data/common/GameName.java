@@ -1,6 +1,6 @@
 package com.arthur_pereira.mind_cracker_server_api.data.common;
 
-import com.arthur_pereira.mind_cracker_server_api.exception.DomainException;
+import com.arthur_pereira.mind_cracker_server_api.exception.common.DomainException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 

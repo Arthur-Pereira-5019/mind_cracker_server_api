@@ -1,7 +1,7 @@
 package com.arthur_pereira.mind_cracker_server_api.data.card;
 
-import com.arthur_pereira.mind_cracker_server_api.exception.DomainException;
-import com.arthur_pereira.mind_cracker_server_api.exception.ResourceNotFoundException;
+import com.arthur_pereira.mind_cracker_server_api.exception.common.DomainException;
+import com.arthur_pereira.mind_cracker_server_api.exception.common.ResourceNotFoundException;
 import com.arthur_pereira.mind_cracker_server_api.model.CardCategory;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

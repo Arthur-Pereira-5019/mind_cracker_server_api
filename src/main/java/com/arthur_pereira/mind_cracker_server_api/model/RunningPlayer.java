@@ -18,16 +18,12 @@ public class RunningPlayer {
     private Usertag usertag;
 
     @Column
-    private int gameOrder;
-
-    @Column
     private int roundsToSkip = 0;
 
     @Column
     private int score = 0;
 
-    public RunningPlayer(int gameOrder, String relatedUserId, Usertag usertag) {
-        this.gameOrder = gameOrder;
+    public RunningPlayer(String relatedUserId, Usertag usertag) {
         this.relatedUserId = relatedUserId;
         this.usertag = usertag;
     }
@@ -39,8 +35,20 @@ public class RunningPlayer {
         return Objects.equals(id, that.id) && Objects.equals(relatedUserId, that.relatedUserId);
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(id, relatedUserId);
     }
+
+
+
+
 }

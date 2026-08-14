@@ -1,6 +1,6 @@
 package com.arthur_pereira.mind_cracker_server_api.configurations;
 
-import com.arthur_pereira.mind_cracker_server_api.exception.ResourceNotFoundException;
+import com.arthur_pereira.mind_cracker_server_api.exception.common.ResourceNotFoundException;
 import com.arthur_pereira.mind_cracker_server_api.service.TokenService;
 import com.arthur_pereira.mind_cracker_server_api.service.UserService;
 import jakarta.servlet.FilterChain;
@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
