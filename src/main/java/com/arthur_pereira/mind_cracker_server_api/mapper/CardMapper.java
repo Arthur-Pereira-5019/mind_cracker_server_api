@@ -14,7 +14,7 @@ public class CardMapper {
         for (CommonCard commonCard : commonCards) {
             commonCardSimpleExhibitionDTOS.add(new CommonCardSimpleExhibitionDTO(commonCard.getCardId(),
                     commonCard.getCardTitle().getValue(),
-                    commonCard.getTips(),
+                    commonCard.getCardTips().getTips(),
                     commonCard.getCardDifficulty(),
                     commonCard.getCardDeckCategory() == null ? "null" : commonCard.getCardDeckCategory().getName().getValue()
             ));

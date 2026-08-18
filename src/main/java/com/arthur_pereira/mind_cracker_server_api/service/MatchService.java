@@ -4,6 +4,7 @@ import com.arthur_pereira.mind_cracker_server_api.data.board.BoardPositionType;
 import com.arthur_pereira.mind_cracker_server_api.data.card.CardDifficulty;
 import com.arthur_pereira.mind_cracker_server_api.data.deck.DeckCommonCards;
 import com.arthur_pereira.mind_cracker_server_api.data.deck.DeckType;
+import com.arthur_pereira.mind_cracker_server_api.data.match.MatchPlayers;
 import com.arthur_pereira.mind_cracker_server_api.dto.match.CreateMatchDTO;
 import com.arthur_pereira.mind_cracker_server_api.dto.match.JoinMatchDTO;
 import com.arthur_pereira.mind_cracker_server_api.exception.common.ResourceNotFoundException;
@@ -51,6 +52,13 @@ public class MatchService {
         RunningPlayer runningPlayer = runningPlayerService.createRunningPlayer(0,user);
         match.getMatchPlayers().addRunningPlayer(runningPlayer);
         return matchRepository.save(match);
+    }
+
+    public Match nextPlayerAndTip(Long matchId) {
+        Match match = findMatchById(matchId);
+        MatchPlayers matchPlayers = match.getMatchPlayers();
+        matchPlayers.goToNextPlayer();
+        match.setMatchPlayers(matchPlayers);
     }
 
     public CommonCard getCurrentCard(Long matchId) {

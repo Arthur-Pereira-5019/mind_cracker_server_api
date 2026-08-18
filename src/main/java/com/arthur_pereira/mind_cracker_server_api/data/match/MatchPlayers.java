@@ -78,7 +78,4 @@ public class MatchPlayers {
         return matchPlayers.stream().sorted(Comparator.comparing(RunningPlayer::getScore).reversed()).toList();
     }
 
-
-
-
 }

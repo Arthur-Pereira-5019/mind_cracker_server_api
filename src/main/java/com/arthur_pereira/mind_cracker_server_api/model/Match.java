@@ -131,4 +131,8 @@ public class Match {
     public void setCurrentCardId(Long currentCardId) {
         this.currentCardId = currentCardId;
     }
+
+    public void setMatchPlayers(MatchPlayers matchPlayers) {
+        this.matchPlayers = matchPlayers;
+    }
 }

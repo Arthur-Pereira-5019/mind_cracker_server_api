@@ -1,13 +1,12 @@
 package com.arthur_pereira.mind_cracker_server_api.model;
 
 import com.arthur_pereira.mind_cracker_server_api.data.card.CardDifficulty;
+import com.arthur_pereira.mind_cracker_server_api.data.card.Tips;
 import com.arthur_pereira.mind_cracker_server_api.data.common.GameName;
 import com.arthur_pereira.mind_cracker_server_api.exception.common.DomainException;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Audited;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -16,13 +15,8 @@ public class CommonCard extends AbstractCard{
     @Embedded
     private GameName cardTitle;
 
-    @ElementCollection
-    @CollectionTable(
-            name = "card_tips",
-            joinColumns = @JoinColumn(name = "card_id")
-    )
-    @Column(name = "tip")
-    private List<String> tips = new ArrayList<>();
+    @Embedded
+    private Tips cardTips;
 
     @Column
     @Enumerated(EnumType.ORDINAL)
@@ -34,16 +28,16 @@ public class CommonCard extends AbstractCard{
     public CommonCard() {
     }
 
-    public CommonCard(CardCategory cardCategory, CardDifficulty cardDifficulty, GameName cardTitle, List<String> tips) {
+    public CommonCard(CardCategory cardCategory, CardDifficulty cardDifficulty, GameName cardTitle, Tips cardTips) {
         super();
         this.cardCategory = cardCategory;
         this.cardDifficulty = cardDifficulty;
         this.cardTitle = cardTitle;
-        this.tips = tips;
+        this.cardTips = cardTips;
     }
 
-    public List<String> getTips() {
-        return tips;
+    public Tips getCardTips() {
+        return cardTips;
     }
 
     public GameName getCardTitle() {
@@ -73,6 +67,7 @@ public class CommonCard extends AbstractCard{
     public void setCardTitle(GameName cardTitle) {
         this.cardTitle = cardTitle;
     }
+
 
 
 }

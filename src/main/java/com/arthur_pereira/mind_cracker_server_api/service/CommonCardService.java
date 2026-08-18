@@ -1,5 +1,6 @@
 package com.arthur_pereira.mind_cracker_server_api.service;
 
+import com.arthur_pereira.mind_cracker_server_api.data.card.Tips;
 import com.arthur_pereira.mind_cracker_server_api.data.common.GameName;
 import com.arthur_pereira.mind_cracker_server_api.dto.card.CommonCardCreationDTO;
 import com.arthur_pereira.mind_cracker_server_api.exception.common.ResourceNotFoundException;
@@ -25,7 +26,7 @@ public class CommonCardService {
         return new CommonCard(cardCategory,
                 commonCardCreationDTO.cardDifficulty(),
                 new GameName(commonCardCreationDTO.cardTitle()),
-                commonCardCreationDTO.tips());
+                new Tips(commonCardCreationDTO.tips()));
     }
 
     public CommonCard findCardById(Long id) {
