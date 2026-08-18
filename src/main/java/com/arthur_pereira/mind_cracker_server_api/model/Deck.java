@@ -1,7 +1,6 @@
 package com.arthur_pereira.mind_cracker_server_api.model;
 
 import com.arthur_pereira.mind_cracker_server_api.data.card.CardCategoriesList;
-import com.arthur_pereira.mind_cracker_server_api.data.card.CardDifficulty;
 import com.arthur_pereira.mind_cracker_server_api.data.common.GameName;
 import com.arthur_pereira.mind_cracker_server_api.data.deck.DeckCommonCards;
 import com.arthur_pereira.mind_cracker_server_api.data.deck.DeckType;
@@ -84,22 +83,18 @@ public class Deck {
         board.setAssociatedDeck(this);
     }
 
-    //TODO: ASK THE CONDUCTOR WHAT TO DO ONCE NOT ENOUGH CARDS
-    public CommonCard shuffleCommonCardOfType(CardDifficulty cardDifficulty, List<Long> usedCardsIds) {
+
+    public SpecialCard shuffleSpecialCardOfType(List<Long> usedSpecialCardsIds) {
         Random random = new Random();
-        List<CommonCard> filteredCards = filterAwayUsedCards(findCommonCardsOfType(cardDifficulty),
-                usedCardsIds);
+        List<SpecialCard> filteredCards = filterAwayUsedSpecialCards(deckSpecialCards,
+                usedSpecialCardsIds);
         return filteredCards.get(random.nextInt(0,filteredCards.size()));
     }
 
-    private List<CommonCard> filterAwayUsedCards(List<CommonCard> commonCards, List<Long> usedCardIds) {
-        return commonCards.stream().filter(x -> !usedCardIds.contains(x.getCardId())).toList();
+    private List<SpecialCard> filterAwayUsedSpecialCards(List<SpecialCard> specialCards, List<Long> usedCardIds) {
+        return specialCards.stream().filter(x -> !usedCardIds.contains(x.getCardId())).toList();
     }
 
-    public List<CommonCard> findCommonCardsOfType(CardDifficulty cardDifficulty) {
-        return deckCommonCards.getDeckCommonCards().stream().filter(x ->
-                x.getCardDifficulty() == cardDifficulty).toList();
-    }
 
     public Board getBoard() {
         return deckBoard;

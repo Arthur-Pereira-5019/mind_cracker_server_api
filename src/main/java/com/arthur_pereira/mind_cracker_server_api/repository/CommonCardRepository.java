@@ -1,0 +1,7 @@
+package com.arthur_pereira.mind_cracker_server_api.repository;
+
+import com.arthur_pereira.mind_cracker_server_api.model.CommonCard;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CommonCardRepository extends JpaRepository<CommonCard, Long> {
+}

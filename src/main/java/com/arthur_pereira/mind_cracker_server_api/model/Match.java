@@ -29,11 +29,19 @@ public class Match {
 
     @ElementCollection
     @CollectionTable(
-            name = "running_game_used_cards",
+            name = "running_game_used_common_cards",
             joinColumns = @JoinColumn(name = "running_game_id")
     )
     @Column
-    private List<Long> gameUsedCards = new ArrayList<>();
+    private List<Long> gameUsedCommonCards = new ArrayList<>();
+
+    @ElementCollection
+    @CollectionTable(
+            name = "running_game_used_special_cards",
+            joinColumns = @JoinColumn(name = "running_game_id")
+    )
+    @Column
+    private List<Long> gameUsedSpecialCards = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(
@@ -68,6 +76,10 @@ public class Match {
         }
     }
 
+    public void incrementRound() {
+        currentRound += 1;
+    }
+
     public MatchPlayers getMatchPlayers() {
         return matchPlayers;
     }
@@ -92,12 +104,20 @@ public class Match {
         return matchType;
     }
 
-    public List<Long> getGameUsedCards() {
-        return gameUsedCards;
+    public List<Long> getGameUsedCommonCards() {
+        return gameUsedCommonCards;
     }
 
-    public void addUsedCard(Long usedCardId) {
-        getGameUsedCards().add(usedCardId);
+    public List<Long> getGameUsedSpecialCards() {
+        return gameUsedCommonCards;
+    }
+
+    public void addUsedCommonCard(Long usedCardId) {
+        gameUsedCommonCards.add(usedCardId);
+    }
+
+    public void addUsedSpecialCard(Long usedCardId) {
+        gameUsedSpecialCards.add(usedCardId);
     }
 
     public void resetUsedCardTips() {
