@@ -67,7 +67,7 @@ public class Match {
     private Long currentCardId;
 
     @Column
-    private int antiMemorizatonCypher;
+    private int antiMemorizatonCipher;
 
     public Match(Deck matchDeck, int matchDeckVersion, String matchPassword, RunningPlayer matchConductor, DeckType matchType) {
         this.matchDeck = matchDeck;
@@ -80,7 +80,7 @@ public class Match {
     }
 
     public void incrementRound() {
-        antiMemorizatonCypher = Long.valueOf(System.nanoTime()).intValue() % 25;
+        antiMemorizatonCipher = Long.valueOf(System.nanoTime()).intValue() % 25;
         currentRound += 1;
     }
 
@@ -152,7 +152,7 @@ public class Match {
         currentUsedTips.add(tip);
     }
 
-    public int getAntiMemorizatonCypher() {
-        return antiMemorizatonCypher;
+    public int getAntiMemorizatonCipher() {
+        return antiMemorizatonCipher;
     }
 }

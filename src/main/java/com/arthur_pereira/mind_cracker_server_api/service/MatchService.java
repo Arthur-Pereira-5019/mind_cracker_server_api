@@ -80,7 +80,7 @@ public class MatchService {
     public List<String> getAllTips(Long matchId, User user) {
         Match match = findMatchAssuringIsPlayer(matchId, user);
         return getCurrentCard(matchId, user).getCardTips().getUsedTips(match.getCurrentUsedTips(),
-                match.getAntiMemorizatonCypher());
+                match.getAntiMemorizatonCipher());
     }
 
     public Match nextRound(Long matchId, User conductor) {

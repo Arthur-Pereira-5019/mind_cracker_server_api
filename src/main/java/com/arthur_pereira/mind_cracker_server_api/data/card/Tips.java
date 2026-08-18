@@ -47,10 +47,10 @@ public class Tips {
         return tips.get(cypheredPosition(position, cypher));
     }
 
-    public List<String> getUsedTips(List<Integer> positions, int cypher) {
+    public List<String> getUsedTips(List<Integer> positions, int cipher) {
         ArrayList<String> usedTips = new ArrayList<>();
         for (Integer position : positions) {
-            usedTips.add(tips.get(cypheredPosition(position,cypher)));
+            usedTips.add(tips.get(cypheredPosition(position,cipher)));
         }
         return usedTips;
     }
