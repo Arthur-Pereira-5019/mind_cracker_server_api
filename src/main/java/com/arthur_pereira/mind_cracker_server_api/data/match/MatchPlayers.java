@@ -4,6 +4,7 @@ import com.arthur_pereira.mind_cracker_server_api.data.common.Pair;
 import com.arthur_pereira.mind_cracker_server_api.exception.common.ResourceNotFoundException;
 import com.arthur_pereira.mind_cracker_server_api.mapper.MatchPlayerQueueMapper;
 import com.arthur_pereira.mind_cracker_server_api.model.RunningPlayer;
+import com.arthur_pereira.mind_cracker_server_api.model.User;
 import jakarta.persistence.*;
 
 import java.util.*;
@@ -76,6 +77,14 @@ public class MatchPlayers {
 
     public List<RunningPlayer> getSortedPlayerListByScore() {
         return matchPlayers.stream().sorted(Comparator.comparing(RunningPlayer::getScore).reversed()).toList();
+    }
+
+    public boolean isUserAPlayer(User user) {
+        return matchPlayers.stream().anyMatch(x -> x.getRelatedUserId().equals(user.getId()));
+    }
+
+    public boolean isUserCurrentPlayer(User user) {
+        return getCurrentPlayer().getRelatedUserId().equals(user.getId());
     }
 
 }

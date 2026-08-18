@@ -39,6 +39,10 @@ public class RunningPlayer {
         return id;
     }
 
+    public String getRelatedUserId() {
+        return relatedUserId;
+    }
+
     public int getScore() {
         return score;
     }

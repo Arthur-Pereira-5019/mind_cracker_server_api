@@ -8,7 +8,9 @@ import com.arthur_pereira.mind_cracker_server_api.data.match.MatchPlayers;
 import com.arthur_pereira.mind_cracker_server_api.dto.match.CreateMatchDTO;
 import com.arthur_pereira.mind_cracker_server_api.dto.match.JoinMatchDTO;
 import com.arthur_pereira.mind_cracker_server_api.exception.common.ResourceNotFoundException;
+import com.arthur_pereira.mind_cracker_server_api.exception.match.IllegalMoveException;
 import com.arthur_pereira.mind_cracker_server_api.exception.match.UnableToJoinMatchException;
+import com.arthur_pereira.mind_cracker_server_api.exception.security.UnauthorizedActionException;
 import com.arthur_pereira.mind_cracker_server_api.model.*;
 import com.arthur_pereira.mind_cracker_server_api.repository.MatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,26 +56,41 @@ public class MatchService {
         return matchRepository.save(match);
     }
 
-    public Match nextPlayerAndTip(Long matchId) {
-        Match match = findMatchById(matchId);
+    public Match goToNextPlayer(Long matchId, User conductor) {
+        Match match = findMatchAssuringIsConductor(matchId, conductor);
         MatchPlayers matchPlayers = match.getMatchPlayers();
         matchPlayers.goToNextPlayer();
         match.setMatchPlayers(matchPlayers);
+        return matchRepository.save(match);
     }
 
-    public CommonCard getCurrentCard(Long matchId) {
-        Match match = findMatchById(matchId);
+    public CommonCard getCurrentCard(Long matchId, User user) {
+        Match match = findMatchAssuringIsPlayer(matchId, user);
         return commonCardService.findCardById(match.getCurrentCardId());
     }
 
-    public Match nextRound(Long matchId) {
-        Match match = findMatchById(matchId);
+    public void askATip(Long matchId, Integer tipPosition, User user) {
+        Match match = findMatchAssuringIsCurrentPlayer(matchId, user);
+        if(match.getCurrentUsedTips().contains(tipPosition)) {
+            throw new IllegalMoveException("The provided tip already was used!");
+        }
+        match.addUsedTip(tipPosition);
+    }
+
+    public List<String> getAllTips(Long matchId, User user) {
+        Match match = findMatchAssuringIsPlayer(matchId, user);
+        return getCurrentCard(matchId, user).getCardTips().getUsedTips(match.getCurrentUsedTips(),
+                match.getAntiMemorizatonCypher());
+    }
+
+    public Match nextRound(Long matchId, User conductor) {
+        Match match = findMatchAssuringIsConductor(matchId, conductor);
         match.resetUsedCardTips();
         match.incrementRound();
         if(match.getMatchType() == DeckType.BOARD_GAME) {
-            return nextRoundBoard(match);
+            return matchRepository.save(nextRoundBoard(match));
         }
-        return nextRoundLeaderboard(match);
+        return matchRepository.save(nextRoundLeaderboard(match));
     }
 
     public Match nextRoundLeaderboard(Match match) {
@@ -114,5 +131,29 @@ public class MatchService {
 
     public Match findMatchById(Long id) {
         return matchRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Couldn't find Match with the provided Id"));
+    }
+
+    public Match findMatchAssuringIsPlayer(Long matchId, User user) {
+        Match match = findMatchById(matchId);
+        if(match.getMatchPlayers().isUserAPlayer(user)) {
+            return match;
+        }
+        throw new UnauthorizedActionException("You aren't a Player of the provided Match.");
+    }
+
+    public Match findMatchAssuringIsCurrentPlayer(Long matchId, User user) {
+        Match match = findMatchById(matchId);
+        if(match.getMatchPlayers().isUserCurrentPlayer(user)) {
+            return match;
+        }
+        throw new UnauthorizedActionException("You aren't the Current Player of the provided Match.");
+    }
+
+    public Match findMatchAssuringIsConductor(Long matchId, User user) {
+        Match match = findMatchById(matchId);
+        if(match.getMatchConductor().getRelatedUserId().equals(user.getId())) {
+            return match;
+        }
+        throw new UnauthorizedActionException("You aren't the Conductor of the provided Match.");
     }
 }

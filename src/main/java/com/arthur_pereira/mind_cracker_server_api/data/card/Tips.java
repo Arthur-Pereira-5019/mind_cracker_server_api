@@ -44,7 +44,19 @@ public class Tips {
     }
 
     public String getTipAtPosWithCypher(int position, int cypher) {
-        return tips.get((position + cypher) % getNumberOfTips());
+        return tips.get(cypheredPosition(position, cypher));
+    }
+
+    public List<String> getUsedTips(List<Integer> positions, int cypher) {
+        ArrayList<String> usedTips = new ArrayList<>();
+        for (Integer position : positions) {
+            usedTips.add(tips.get(cypheredPosition(position,cypher)));
+        }
+        return usedTips;
+    }
+
+    private int cypheredPosition(int position, int cypher) {
+        return (position + cypher) % getNumberOfTips();
     }
 
 }

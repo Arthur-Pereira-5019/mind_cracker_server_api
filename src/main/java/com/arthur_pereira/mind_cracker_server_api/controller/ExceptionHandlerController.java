@@ -2,6 +2,7 @@ package com.arthur_pereira.mind_cracker_server_api.controller;
 
 import com.arthur_pereira.mind_cracker_server_api.data.common.ExceptionResult;
 import com.arthur_pereira.mind_cracker_server_api.exception.common.*;
+import com.arthur_pereira.mind_cracker_server_api.exception.match.IllegalMoveException;
 import com.arthur_pereira.mind_cracker_server_api.exception.match.InexistingPlayerPosition;
 import com.arthur_pereira.mind_cracker_server_api.exception.match.UnableToJoinMatchException;
 import com.arthur_pereira.mind_cracker_server_api.exception.security.TokenGenerationException;
@@ -111,6 +112,14 @@ public class ExceptionHandlerController {
     public final ResponseEntity<ExceptionResult> handleImpossibleConversionException(Exception ex, WebRequest request) {
         ExceptionResult exceptionResponse = new ExceptionResult(ex.getMessage(), new Date(), request.getDescription(false));
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(exceptionResponse);
+    }
+
+    @ExceptionHandler(IllegalMoveException.class)
+    public final ResponseEntity<ExceptionResult> handleIllegalMoveException(Exception ex, WebRequest request) {
+        ExceptionResult exceptionResponse = new ExceptionResult(ex.getMessage(), new Date(), request.getDescription(false));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(exceptionResponse);
     }
