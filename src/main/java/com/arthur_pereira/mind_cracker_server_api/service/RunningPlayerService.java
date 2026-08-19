@@ -5,7 +5,9 @@ import com.arthur_pereira.mind_cracker_server_api.model.RunningPlayer;
 import com.arthur_pereira.mind_cracker_server_api.model.User;
 import com.arthur_pereira.mind_cracker_server_api.repository.RunningPlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class RunningPlayerService {
     @Autowired
     private RunningPlayerRepository runningPlayerRepository;

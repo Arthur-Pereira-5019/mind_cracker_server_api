@@ -14,10 +14,12 @@ import com.arthur_pereira.mind_cracker_server_api.exception.security.Unauthorize
 import com.arthur_pereira.mind_cracker_server_api.model.*;
 import com.arthur_pereira.mind_cracker_server_api.repository.MatchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 
+@Service
 public class MatchService {
     @Autowired
     private MatchRepository matchRepository;
@@ -44,7 +46,12 @@ public class MatchService {
         RunningPlayer conductor = runningPlayerService.createRunningPlayer(user);
         Match match = new Match(deck, 0, createMatchDTO.matchPassword(), conductor,
                 createMatchDTO.gameType(), createMatchDTO.toleratedAnswerConfiguration());
-        return matchRepository.save(match);
+        try {
+            matchRepository.save(match);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public Match joinMatch(JoinMatchDTO joinMatchDTO, User user) {
@@ -77,7 +84,7 @@ public class MatchService {
     }
 
     public CommonCard getCurrentCard(Long matchId, User user) {
-        Match match = findMatchAssuringIsPlayer(matchId, user);
+        Match match = findMatchAssuringIsConductor(matchId, user);
         return commonCardService.findCardById(match.getCurrentCardId());
     }
 
@@ -95,9 +102,13 @@ public class MatchService {
 
     public boolean attemptAnswer(Long matchId, User user, String givenAnswer) {
         Match match = findMatchAssuringIsCurrentPlayer(matchId, user);
-        String expectedAnswer = getCurrentCard(match).getCardTitle().getValue();
+        CommonCard commonCard = getCurrentCard(match);
+        String expectedAnswer = commonCard.getCardTitle().getValue();
         if(stringManipulationService.matchUnformattedStrings(expectedAnswer, givenAnswer,
                 match.getToleratedAnswerConfiguration().value)) {
+            runningPlayerService.makePlayerScore(commonCard.getCardTips().getNumberOfTips() -
+                    match.getCurrentUsedTips().size(), match.getMatchPlayers().getCurrentPlayer().getId()
+            );
             return true;
         }
         return false;
@@ -108,7 +119,7 @@ public class MatchService {
     }
 
     public List<String> getAllTips(Long matchId, User user) {
-        Match match = findMatchAssuringIsPlayer(matchId, user);
+        Match match = findMatchAssuringIsConductor(matchId, user);
         return getCurrentCard(matchId, user).getCardTips().getUsedTips(match.getCurrentUsedTips(),
                 match.getAntiMemorizatonCipher());
     }

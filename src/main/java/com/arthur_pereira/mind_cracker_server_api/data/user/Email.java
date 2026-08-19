@@ -18,7 +18,7 @@ public class Email{
     }
 
     private void validateEmail(String email) {
-        if(email == null) {
+        if(email == null || email.isBlank()) {
             throw new DomainException("Empty E-Mail");
         }
         if (!email.matches(".{3,64}\\@.{4,255}")) {

@@ -25,6 +25,9 @@ public class Tips {
         this.tips = tips;
     }
 
+    public Tips() {
+    }
+
     private void validateTips(List<String> tips) {
         for (String tip : tips) {
             if(tip.length() > 255) {
