@@ -1,5 +1,6 @@
 package com.arthur_pereira.mind_cracker_server_api.dto.deck;
 
+import com.arthur_pereira.mind_cracker_server_api.data.match.ToleratedAnswerConfiguration;
 import com.arthur_pereira.mind_cracker_server_api.dto.card.CommonCardSimpleExhibitionDTO;
 import com.arthur_pereira.mind_cracker_server_api.dto.card.SpecialCardSimpleExhibitionDTO;
 import com.arthur_pereira.mind_cracker_server_api.dto.user.AuthorExhibitionDTO;
@@ -15,5 +16,6 @@ public record DeckCompleteExhibitionDTO(Long deckId,
                                         Board deckBoard,
                                         List<SpecialCardSimpleExhibitionDTO> deckSpecialCards,
                                         List<CommonCardSimpleExhibitionDTO> deckCommonCards,
-                                        List<CardCategory> deckCardCategories
+                                        List<CardCategory> deckCardCategories,
+                                        ToleratedAnswerConfiguration suggestedAnswerTolerance
 ) { }

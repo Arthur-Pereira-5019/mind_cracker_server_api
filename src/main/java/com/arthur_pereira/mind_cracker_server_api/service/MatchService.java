@@ -32,13 +32,18 @@ public class MatchService {
     private CommonCardService commonCardService;
 
     @Autowired
+    private StringManipulationService stringManipulationService;
+
+    @Autowired
     private RunningPlayerService runningPlayerService;
 
     public Match createMatch(CreateMatchDTO createMatchDTO, User user) {
         Deck deck = deckService.findDeckById(createMatchDTO.matchDeckId());
         deck.simulateLoading(createMatchDTO.gameType());
-        RunningPlayer conductor = runningPlayerService.createRunningPlayer(-1,user);
-        Match match = new Match(deck, 0, createMatchDTO.matchPassword(), conductor, createMatchDTO.gameType());
+        userService.attemptToJoin(user);
+        RunningPlayer conductor = runningPlayerService.createRunningPlayer(user);
+        Match match = new Match(deck, 0, createMatchDTO.matchPassword(), conductor,
+                createMatchDTO.gameType(), createMatchDTO.toleratedAnswerConfiguration());
         return matchRepository.save(match);
     }
 
@@ -51,8 +56,15 @@ public class MatchService {
             throw new UnableToJoinMatchException("The given password doesn't match the Match actual password.");
         }
         user = userService.attemptToJoin(user);
-        RunningPlayer runningPlayer = runningPlayerService.createRunningPlayer(0,user);
+        RunningPlayer runningPlayer = runningPlayerService.createRunningPlayer(user);
         match.getMatchPlayers().addRunningPlayer(runningPlayer);
+        return matchRepository.save(match);
+    }
+
+    public Match leaveMatch(Long matchId, User user) {
+        Match match = findMatchAssuringIsPlayer(matchId, user);
+        match.getMatchPlayers().removeRunningPlayer(
+                runningPlayerService.findPlayerByUserId(user.getId()));
         return matchRepository.save(match);
     }
 
@@ -69,12 +81,30 @@ public class MatchService {
         return commonCardService.findCardById(match.getCurrentCardId());
     }
 
+    private CommonCard getCurrentCard(Match match) {
+        return commonCardService.findCardById(match.getCurrentCardId());
+    }
+
     public void askATip(Long matchId, Integer tipPosition, User user) {
         Match match = findMatchAssuringIsCurrentPlayer(matchId, user);
         if(match.getCurrentUsedTips().contains(tipPosition)) {
             throw new IllegalMoveException("The provided tip already was used!");
         }
         match.addUsedTip(tipPosition);
+    }
+
+    public boolean attemptAnswer(Long matchId, User user, String givenAnswer) {
+        Match match = findMatchAssuringIsCurrentPlayer(matchId, user);
+        String expectedAnswer = getCurrentCard(match).getCardTitle().getValue();
+        if(stringManipulationService.matchUnformattedStrings(expectedAnswer, givenAnswer,
+                match.getToleratedAnswerConfiguration().value)) {
+            return true;
+        }
+        return false;
+    }
+
+    private void playerScore(RunningPlayer player) {
+
     }
 
     public List<String> getAllTips(Long matchId, User user) {

@@ -2,6 +2,7 @@ package com.arthur_pereira.mind_cracker_server_api.model;
 
 import com.arthur_pereira.mind_cracker_server_api.data.deck.DeckType;
 import com.arthur_pereira.mind_cracker_server_api.data.match.MatchPlayers;
+import com.arthur_pereira.mind_cracker_server_api.data.match.ToleratedAnswerConfiguration;
 import com.arthur_pereira.mind_cracker_server_api.exception.common.DomainException;
 import jakarta.persistence.*;
 
@@ -69,11 +70,15 @@ public class Match {
     @Column
     private int antiMemorizatonCipher;
 
-    public Match(Deck matchDeck, int matchDeckVersion, String matchPassword, RunningPlayer matchConductor, DeckType matchType) {
+    @Column
+    private ToleratedAnswerConfiguration toleratedAnswerConfiguration;
+
+    public Match(Deck matchDeck, int matchDeckVersion, String matchPassword, RunningPlayer matchConductor, DeckType matchType, ToleratedAnswerConfiguration toleratedAnswerConfiguration) {
         this.matchDeck = matchDeck;
         this.matchDeckVersion = matchDeckVersion;
         this.matchPassword = matchPassword;
         this.matchConductor = matchConductor;
+        this.toleratedAnswerConfiguration = toleratedAnswerConfiguration;
         if(matchType == DeckType.OPTIONAL) {
             throw new DomainException("Match must have a defined type!");
         }
@@ -154,5 +159,13 @@ public class Match {
 
     public int getAntiMemorizatonCipher() {
         return antiMemorizatonCipher;
+    }
+
+    public ToleratedAnswerConfiguration getToleratedAnswerConfiguration() {
+        return toleratedAnswerConfiguration;
+    }
+
+    public void setToleratedAnswerConfiguration(ToleratedAnswerConfiguration toleratedAnswerConfiguration) {
+        this.toleratedAnswerConfiguration = toleratedAnswerConfiguration;
     }
 }

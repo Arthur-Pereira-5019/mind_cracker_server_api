@@ -47,6 +47,13 @@ public class RunningPlayer {
         return score;
     }
 
+    public void incrementScore(int score) {
+        this.score += score;
+        if(score < 0) {
+            score = 0;
+        }
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(id, relatedUserId);

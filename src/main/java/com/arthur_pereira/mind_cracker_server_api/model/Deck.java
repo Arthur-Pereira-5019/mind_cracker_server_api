@@ -5,6 +5,7 @@ import com.arthur_pereira.mind_cracker_server_api.data.common.GameName;
 import com.arthur_pereira.mind_cracker_server_api.data.deck.DeckCommonCards;
 import com.arthur_pereira.mind_cracker_server_api.data.deck.DeckType;
 import com.arthur_pereira.mind_cracker_server_api.data.deck.LoadingType;
+import com.arthur_pereira.mind_cracker_server_api.data.match.ToleratedAnswerConfiguration;
 import com.arthur_pereira.mind_cracker_server_api.exception.common.BadLoadAttemptException;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Audited;
@@ -32,6 +33,9 @@ public class Deck {
 
     @Embedded
     private DeckCommonCards deckCommonCards;
+
+    @Column
+    private ToleratedAnswerConfiguration suggestedAnswerTolerance = ToleratedAnswerConfiguration.LOW_TOLERANCE;
 
     @Column
     @Enumerated(value = EnumType.ORDINAL)
@@ -142,5 +146,13 @@ public class Deck {
 
     public void setDeckCommonCards(DeckCommonCards deckCommonCards) {
         this.deckCommonCards = deckCommonCards;
+    }
+
+    public ToleratedAnswerConfiguration getSuggestedAnswerTolerance() {
+        return suggestedAnswerTolerance;
+    }
+
+    public void setSuggestedAnswerTolerance(ToleratedAnswerConfiguration suggestedAnswerTolerance) {
+        this.suggestedAnswerTolerance = suggestedAnswerTolerance;
     }
 }

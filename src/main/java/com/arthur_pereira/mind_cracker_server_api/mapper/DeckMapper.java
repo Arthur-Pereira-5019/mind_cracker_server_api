@@ -25,7 +25,8 @@ public class DeckMapper {
                 deck.getBoard(),
                 CardMapper.mapToListSpecialCardSimpleExhibitionDTO(deck.getDeckSpecialCards()),
                 CardMapper.mapToListCommonCardSimpleExhibitionDTO(deck.getDeckCommonCards().getDeckCommonCards()),
-                deck.getDeckCategories().getCardCategories()
+                deck.getDeckCategories().getCardCategories(),
+                deck.getSuggestedAnswerTolerance()
         );
     }
 }
