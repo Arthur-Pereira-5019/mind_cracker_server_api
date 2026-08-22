@@ -1,4 +1,4 @@
-package com.arthur_pereira.mind_cracker_server_api.data.match;
+package com.arthur_pereira.mind_cracker_server_api.data.game;
 
 public enum ToleratedAnswerConfiguration {
     LOW_TOLERANCE(1),

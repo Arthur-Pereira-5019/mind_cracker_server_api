@@ -9,7 +9,7 @@ import tools.jackson.databind.ObjectMapper;
 import java.util.Map;
 
 @Converter
-public class MatchPlayerQueueMapper implements AttributeConverter<Map<Long, Pair<Long, Long>>, String> {
+public class GamePlayerQueueMapper implements AttributeConverter<Map<Long, Pair<Long, Long>>, String> {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     @Override

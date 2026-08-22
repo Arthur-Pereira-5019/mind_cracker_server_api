@@ -6,7 +6,7 @@ import com.arthur_pereira.mind_cracker_server_api.data.user.Usertag;
 import com.arthur_pereira.mind_cracker_server_api.dto.user.UserCreationDTO;
 import com.arthur_pereira.mind_cracker_server_api.exception.common.DuplicatedResourceException;
 import com.arthur_pereira.mind_cracker_server_api.exception.common.ResourceNotFoundException;
-import com.arthur_pereira.mind_cracker_server_api.exception.match.UnableToJoinMatchException;
+import com.arthur_pereira.mind_cracker_server_api.exception.game.UnableToJoinGameException;
 import com.arthur_pereira.mind_cracker_server_api.exception.security.UnauthorizedActionException;
 import com.arthur_pereira.mind_cracker_server_api.model.User;
 import com.arthur_pereira.mind_cracker_server_api.repository.UserRepository;
@@ -51,7 +51,7 @@ public class UserService implements UserDetailsService {
 
     public User attemptToJoin(User user) {
         if(user.isPlaying()) {
-            throw new UnableToJoinMatchException("Already on a Match.");
+            throw new UnableToJoinGameException("Already on a Game.");
         }
         if(user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_SUSPENDED"))) {
             throw new UnauthorizedActionException("Can't play while suspended");

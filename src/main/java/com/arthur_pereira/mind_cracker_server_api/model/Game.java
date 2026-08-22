@@ -1,8 +1,8 @@
 package com.arthur_pereira.mind_cracker_server_api.model;
 
 import com.arthur_pereira.mind_cracker_server_api.data.deck.DeckType;
-import com.arthur_pereira.mind_cracker_server_api.data.match.MatchPlayers;
-import com.arthur_pereira.mind_cracker_server_api.data.match.ToleratedAnswerConfiguration;
+import com.arthur_pereira.mind_cracker_server_api.data.game.GamePlayers;
+import com.arthur_pereira.mind_cracker_server_api.data.game.ToleratedAnswerConfiguration;
 import com.arthur_pereira.mind_cracker_server_api.exception.common.DomainException;
 import jakarta.persistence.*;
 
@@ -10,28 +10,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Match {
+public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long matchId;
+    private Long gameId;
 
     @Embedded
-    private MatchPlayers matchPlayers = new MatchPlayers();
+    private GamePlayers gamePlayers = new GamePlayers();
 
     @Column
-    private String matchPassword = "";
+    private String gamePassword = "";
 
     @ManyToOne
-    private Deck matchDeck;
+    private Deck gameDeck;
 
     @Column
     @Enumerated
-    private DeckType matchType;
+    private DeckType gameType;
 
     @ElementCollection
     @CollectionTable(
             name = "running_game_used_common_cards",
-            joinColumns = @JoinColumn(name = "running_game_id")
+            joinColumns = @JoinColumn(name = "gameId")
     )
     @Column
     private List<Long> gameUsedCommonCards = new ArrayList<>();
@@ -39,7 +39,7 @@ public class Match {
     @ElementCollection
     @CollectionTable(
             name = "running_game_used_special_cards",
-            joinColumns = @JoinColumn(name = "running_game_id")
+            joinColumns = @JoinColumn(name = "gameId")
     )
     @Column
     private List<Long> gameUsedSpecialCards = new ArrayList<>();
@@ -47,19 +47,19 @@ public class Match {
     @ElementCollection
     @CollectionTable(
             name = "running_game_used_tips",
-            joinColumns = @JoinColumn(name = "running_game_id")
+            joinColumns = @JoinColumn(name = "gameId")
     )
     @Column
     private List<Integer> currentUsedTips = new ArrayList<>();
 
     @Column
-    private int matchDeckVersion;
+    private int gameDeckVersion;
 
     @Column
     private int currentRound;
 
     @OneToOne
-    private RunningPlayer matchConductor;
+    private RunningPlayer gameConductor;
 
     @Column
     private boolean started = false;
@@ -73,14 +73,14 @@ public class Match {
     @Column
     private ToleratedAnswerConfiguration toleratedAnswerConfiguration;
 
-    public Match(Deck matchDeck, int matchDeckVersion, String matchPassword, RunningPlayer matchConductor, DeckType matchType, ToleratedAnswerConfiguration toleratedAnswerConfiguration) {
-        this.matchDeck = matchDeck;
-        this.matchDeckVersion = matchDeckVersion;
-        this.matchPassword = matchPassword;
-        this.matchConductor = matchConductor;
+    public Game(Deck gameDeck, int gameDeckVersion, String gamePassword, RunningPlayer gameConductor, DeckType gameType, ToleratedAnswerConfiguration toleratedAnswerConfiguration) {
+        this.gameDeck = gameDeck;
+        this.gameDeckVersion = gameDeckVersion;
+        this.gamePassword = gamePassword;
+        this.gameConductor = gameConductor;
         this.toleratedAnswerConfiguration = toleratedAnswerConfiguration;
-        if(matchType == DeckType.OPTIONAL) {
-            throw new DomainException("Match must have a defined type!");
+        if(gameType == DeckType.OPTIONAL) {
+            throw new DomainException("Game must have a defined type!");
         }
     }
 
@@ -89,8 +89,8 @@ public class Match {
         currentRound += 1;
     }
 
-    public MatchPlayers getMatchPlayers() {
-        return matchPlayers;
+    public GamePlayers getGamePlayers() {
+        return gamePlayers;
     }
 
     public void start() {
@@ -101,16 +101,16 @@ public class Match {
         return started;
     }
 
-    public Deck getMatchDeck() {
-        return matchDeck;
+    public Deck getGameDeck() {
+        return gameDeck;
     }
 
-    public String getMatchPassword() {
-        return matchPassword;
+    public String getGamePassword() {
+        return gamePassword;
     }
 
-    public DeckType getMatchType() {
-        return matchType;
+    public DeckType getGameType() {
+        return gameType;
     }
 
     public List<Long> getGameUsedCommonCards() {
@@ -141,12 +141,12 @@ public class Match {
         this.currentCardId = currentCardId;
     }
 
-    public void setMatchPlayers(MatchPlayers matchPlayers) {
-        this.matchPlayers = matchPlayers;
+    public void setGamePlayers(GamePlayers gamePlayers) {
+        this.gamePlayers = gamePlayers;
     }
 
-    public RunningPlayer getMatchConductor() {
-        return matchConductor;
+    public RunningPlayer getGameConductor() {
+        return gameConductor;
     }
 
     public List<Integer> getCurrentUsedTips() {

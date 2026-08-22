@@ -5,7 +5,7 @@ import com.arthur_pereira.mind_cracker_server_api.data.common.GameName;
 import com.arthur_pereira.mind_cracker_server_api.data.deck.DeckCommonCards;
 import com.arthur_pereira.mind_cracker_server_api.data.deck.DeckType;
 import com.arthur_pereira.mind_cracker_server_api.data.deck.LoadingType;
-import com.arthur_pereira.mind_cracker_server_api.data.match.ToleratedAnswerConfiguration;
+import com.arthur_pereira.mind_cracker_server_api.data.game.ToleratedAnswerConfiguration;
 import com.arthur_pereira.mind_cracker_server_api.exception.common.BadLoadAttemptException;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Audited;
