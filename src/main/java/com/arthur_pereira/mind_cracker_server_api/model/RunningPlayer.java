@@ -23,6 +23,9 @@ public class RunningPlayer {
     @Column
     private int score = 0;
 
+    public RunningPlayer() {
+    }
+
     public RunningPlayer(String relatedUserId, Usertag usertag) {
         this.relatedUserId = relatedUserId;
         this.usertag = usertag;

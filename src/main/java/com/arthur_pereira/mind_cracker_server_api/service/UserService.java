@@ -49,6 +49,14 @@ public class UserService implements UserDetailsService {
         throw new DuplicatedResourceException("The given Usertag is already being used.");
     }
 
+    public void markEveryUserAsNotPlaying() {
+        userRepository.markEveryUserAsNotPlaying();
+    }
+
+    public void markEveryUserOfAGameAsNotPlaying(Long gameId) {
+        userRepository.markEveryUserOfAGameAsNotPlaying(gameId);
+    }
+
     public User attemptToJoin(User user) {
         if(user.isPlaying()) {
             throw new UnableToJoinGameException("Already on a Game.");

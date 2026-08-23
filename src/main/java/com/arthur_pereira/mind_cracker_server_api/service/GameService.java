@@ -13,8 +13,10 @@ import com.arthur_pereira.mind_cracker_server_api.exception.game.UnableToJoinGam
 import com.arthur_pereira.mind_cracker_server_api.exception.security.UnauthorizedActionException;
 import com.arthur_pereira.mind_cracker_server_api.model.*;
 import com.arthur_pereira.mind_cracker_server_api.repository.GameRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.List;
 import java.util.Objects;
@@ -39,15 +41,20 @@ public class GameService {
     @Autowired
     private RunningPlayerService runningPlayerService;
 
+    @Transactional
     public Game createGame(CreateGameDTO createGameDTO, User user) {
-        Deck deck = deckService.findDeckById(createGameDTO.gameDeckId());
-        deck.simulateLoading(createGameDTO.gameType());
-        userService.attemptToJoin(user);
-        RunningPlayer conductor = runningPlayerService.createRunningPlayer(user);
-        Game game = new Game(deck, 0, createGameDTO.gamePassword(), conductor,
-                createGameDTO.gameType(), createGameDTO.toleratedAnswerConfiguration());
-
-        return gameRepository.save(game);
+        try {
+            Deck deck = deckService.findDeckById(createGameDTO.gameDeckId());
+            deck.simulateLoading(createGameDTO.gameType());
+            userService.attemptToJoin(user);
+            RunningPlayer conductor = runningPlayerService.createRunningPlayer(user);
+            Game game = new Game(deck, 0, createGameDTO.gamePassword(), conductor,
+                    createGameDTO.gameType(), createGameDTO.toleratedAnswerConfiguration());
+            return gameRepository.save(game);
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            throw e;
+        }
     }
 
     public Game joinGame(JoinGameDTO joinGameDTO, User user) {
@@ -110,6 +117,16 @@ public class GameService {
         return false;
     }
 
+    public void shutdownEveryGame() {
+        userService.markEveryUserAsNotPlaying();
+        gameRepository.deleteAll();
+    }
+
+    public void shutdownAGame(Game game) {
+        userService.markEveryUserOfAGameAsNotPlaying(game.getGameId());
+        gameRepository.delete(game);
+    }
+
     private void playerScore(RunningPlayer player) {
 
     }
@@ -117,7 +134,7 @@ public class GameService {
     public List<String> getAllTips(Long gameId, User user) {
         Game game = findGameAssuringIsConductor(gameId, user);
         return getCurrentCard(gameId, user).getCardTips().getUsedTips(game.getCurrentUsedTips(),
-                game.getAntiMemorizatonCipher());
+                game.getAntiMemorizationCipher());
     }
 
     public Game nextRound(Long gameId, User conductor) {

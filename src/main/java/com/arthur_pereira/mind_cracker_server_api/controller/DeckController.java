@@ -30,45 +30,48 @@ public class DeckController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private DeckMapper deckMapper;
+
     @GetMapping("/get/{id}")
     public DeckCompleteExhibitionDTO findDeckById(@PathVariable("id") Long id) {
         Deck deck = deckService.findDeckById(id);
-        return DeckMapper.mapToDeckCompleteExhibitionDTO(deck);
+        return deckMapper.mapToDeckCompleteExhibitionDTO(deck);
     }
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/create")
     public DeckExhibitionDTO createDeck(@RequestBody DeckCreationDTO deckCreationDTO, @AuthenticationPrincipal UserDetails userDetails) {
         Deck deck = deckService.createDeck(deckCreationDTO, userService.userFromUserDetails(userDetails));
-        return DeckMapper.mapToDeckExhibitionDTO(deck);
+        return deckMapper.mapToDeckExhibitionDTO(deck);
     }
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("modify/{id}/cards/add/common")
     public DeckCompleteExhibitionDTO addCommonCardToDeckById(@PathVariable("id") Long id, @RequestBody CommonCardCreationDTO commonCardCreationDTO, @AuthenticationPrincipal UserDetails userDetails) {
         Deck deck = deckService.addCardToDeck(id, userService.userFromUserDetails(userDetails), commonCardCreationDTO);
-        return DeckMapper.mapToDeckCompleteExhibitionDTO(deck);
+        return deckMapper.mapToDeckCompleteExhibitionDTO(deck);
     }
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("modify/{id}/board/create/")
     public DeckCompleteExhibitionDTO associateBoardToDeckById(@PathVariable("id") Long id, @RequestBody BoardCreationDTO boardCreationDTO, @AuthenticationPrincipal UserDetails userDetails) {
         Deck deck = deckService.associateBoardToDeckById(id, userService.userFromUserDetails(userDetails), boardCreationDTO);
-        return DeckMapper.mapToDeckCompleteExhibitionDTO(deck);
+        return deckMapper.mapToDeckCompleteExhibitionDTO(deck);
     }
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/modify/{id}/board/map_positions")
     public DeckCompleteExhibitionDTO associatePositionsToDeckBoard(@PathVariable("id") Long id, @RequestBody Map<Integer, BoardPositionType> boardPositions, @AuthenticationPrincipal UserDetails userDetails) {
         Deck deck = deckService.associatePositionsToDeckBoard(id, userService.userFromUserDetails(userDetails), boardPositions);
-        return DeckMapper.mapToDeckCompleteExhibitionDTO(deck);
+        return deckMapper.mapToDeckCompleteExhibitionDTO(deck);
     }
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/modify/{id}/categories/add")
     public DeckCompleteExhibitionDTO addCategoryToDeck(@PathVariable("id") Long id, @RequestBody SimpleNamedEntityDTO simpleNamedEntityDTO, @AuthenticationPrincipal UserDetails userDetails) {
         Deck deck = deckService.addCategoryToDeck(id, userService.userFromUserDetails(userDetails), simpleNamedEntityDTO);
-        return DeckMapper.mapToDeckCompleteExhibitionDTO(deck);
+        return deckMapper.mapToDeckCompleteExhibitionDTO(deck);
     }
 
 

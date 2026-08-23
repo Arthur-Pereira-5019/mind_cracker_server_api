@@ -4,10 +4,12 @@ import com.arthur_pereira.mind_cracker_server_api.dto.deck.DeckCompleteExhibitio
 import com.arthur_pereira.mind_cracker_server_api.dto.deck.DeckExhibitionDTO;
 import com.arthur_pereira.mind_cracker_server_api.dto.user.AuthorExhibitionDTO;
 import com.arthur_pereira.mind_cracker_server_api.model.Deck;
+import org.springframework.stereotype.Service;
 
+@Service
 public class DeckMapper {
 
-    public static DeckExhibitionDTO mapToDeckExhibitionDTO(Deck deck) {
+    public DeckExhibitionDTO mapToDeckExhibitionDTO(Deck deck) {
         AuthorExhibitionDTO authorExhibitionDTO = UserMapper.mapUserToAuthorExhibitionDTO(deck.getAuthor());
         return new DeckExhibitionDTO(deck.getDeckId(),
                 deck.getDeckName().getValue(),
@@ -16,7 +18,7 @@ public class DeckMapper {
         );
     }
 
-    public static DeckCompleteExhibitionDTO mapToDeckCompleteExhibitionDTO(Deck deck) {
+    public DeckCompleteExhibitionDTO mapToDeckCompleteExhibitionDTO(Deck deck) {
         AuthorExhibitionDTO authorExhibitionDTO = UserMapper.mapUserToAuthorExhibitionDTO(deck.getAuthor());
         return new DeckCompleteExhibitionDTO(deck.getDeckId(),
                 deck.getDeckName().getValue(),

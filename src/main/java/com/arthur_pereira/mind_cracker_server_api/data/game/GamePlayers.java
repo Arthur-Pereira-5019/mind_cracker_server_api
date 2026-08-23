@@ -87,4 +87,11 @@ public class GamePlayers {
         return getCurrentPlayer().getRelatedUserId().equals(user.getId());
     }
 
+    public void empty() {
+        gamePlayers = new ArrayList<>();
+    }
+
+    public List<RunningPlayer> getGamePlayers() {
+        return gamePlayers;
+    }
 }

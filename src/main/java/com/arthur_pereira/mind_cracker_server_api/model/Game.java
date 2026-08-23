@@ -68,10 +68,13 @@ public class Game {
     private Long currentCardId;
 
     @Column
-    private int antiMemorizatonCipher;
+    private int antiMemorizationCipher;
 
     @Column
     private ToleratedAnswerConfiguration toleratedAnswerConfiguration;
+
+    public Game() {
+    }
 
     public Game(Deck gameDeck, int gameDeckVersion, String gamePassword, RunningPlayer gameConductor, DeckType gameType, ToleratedAnswerConfiguration toleratedAnswerConfiguration) {
         this.gameDeck = gameDeck;
@@ -85,8 +88,12 @@ public class Game {
     }
 
     public void incrementRound() {
-        antiMemorizatonCipher = Long.valueOf(System.nanoTime()).intValue() % 25;
+        antiMemorizationCipher = Long.valueOf(System.nanoTime()).intValue() % 25;
         currentRound += 1;
+    }
+
+    public Long getGameId() {
+        return gameId;
     }
 
     public GamePlayers getGamePlayers() {
@@ -157,8 +164,8 @@ public class Game {
         currentUsedTips.add(tip);
     }
 
-    public int getAntiMemorizatonCipher() {
-        return antiMemorizatonCipher;
+    public int getAntiMemorizationCipher() {
+        return antiMemorizationCipher;
     }
 
     public ToleratedAnswerConfiguration getToleratedAnswerConfiguration() {
@@ -167,5 +174,11 @@ public class Game {
 
     public void setToleratedAnswerConfiguration(ToleratedAnswerConfiguration toleratedAnswerConfiguration) {
         this.toleratedAnswerConfiguration = toleratedAnswerConfiguration;
+    }
+
+
+    public void kickAllPlayers() {
+        this.gamePlayers.empty();
+        this.gameConductor = null;
     }
 }
