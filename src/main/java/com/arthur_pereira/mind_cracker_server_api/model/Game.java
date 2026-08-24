@@ -1,7 +1,6 @@
 package com.arthur_pereira.mind_cracker_server_api.model;
 
 import com.arthur_pereira.mind_cracker_server_api.data.deck.DeckType;
-import com.arthur_pereira.mind_cracker_server_api.data.game.GamePlayers;
 import com.arthur_pereira.mind_cracker_server_api.data.game.ToleratedAnswerConfiguration;
 import com.arthur_pereira.mind_cracker_server_api.exception.common.DomainException;
 import jakarta.persistence.*;
@@ -15,8 +14,8 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long gameId;
 
-    @Embedded
-    private GamePlayers gamePlayers = new GamePlayers();
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    private GamePlayers gamePlayers;
 
     @Column
     private String gamePassword = "";
@@ -96,7 +95,7 @@ public class Game {
         return gameId;
     }
 
-    public GamePlayers getGamePlayers() {
+    public com.arthur_pereira.mind_cracker_server_api.model.GamePlayers getGamePlayers() {
         return gamePlayers;
     }
 
@@ -176,9 +175,4 @@ public class Game {
         this.toleratedAnswerConfiguration = toleratedAnswerConfiguration;
     }
 
-
-    public void kickAllPlayers() {
-        this.gamePlayers.empty();
-        this.gameConductor = null;
-    }
 }

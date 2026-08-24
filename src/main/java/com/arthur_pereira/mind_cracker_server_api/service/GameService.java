@@ -4,7 +4,6 @@ import com.arthur_pereira.mind_cracker_server_api.data.board.BoardPositionType;
 import com.arthur_pereira.mind_cracker_server_api.data.card.CardDifficulty;
 import com.arthur_pereira.mind_cracker_server_api.data.deck.DeckCommonCards;
 import com.arthur_pereira.mind_cracker_server_api.data.deck.DeckType;
-import com.arthur_pereira.mind_cracker_server_api.data.game.GamePlayers;
 import com.arthur_pereira.mind_cracker_server_api.dto.game.CreateGameDTO;
 import com.arthur_pereira.mind_cracker_server_api.dto.game.JoinGameDTO;
 import com.arthur_pereira.mind_cracker_server_api.exception.common.ResourceNotFoundException;
@@ -12,6 +11,7 @@ import com.arthur_pereira.mind_cracker_server_api.exception.game.IllegalMoveExce
 import com.arthur_pereira.mind_cracker_server_api.exception.game.UnableToJoinGameException;
 import com.arthur_pereira.mind_cracker_server_api.exception.security.UnauthorizedActionException;
 import com.arthur_pereira.mind_cracker_server_api.model.*;
+import com.arthur_pereira.mind_cracker_server_api.repository.GamePlayerRepository;
 import com.arthur_pereira.mind_cracker_server_api.repository.GameRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +40,9 @@ public class GameService {
 
     @Autowired
     private RunningPlayerService runningPlayerService;
+
+    @Autowired
+    private GamePlayerRepository gamePlayerRepository;
 
     @Transactional
     public Game createGame(CreateGameDTO createGameDTO, User user) {
@@ -117,9 +120,11 @@ public class GameService {
         return false;
     }
 
+    @Transactional
     public void shutdownEveryGame() {
         userService.markEveryUserAsNotPlaying();
         gameRepository.deleteAll();
+        gameRepository.flush();
     }
 
     public void shutdownAGame(Game game) {

@@ -1,27 +1,33 @@
-package com.arthur_pereira.mind_cracker_server_api.data.game;
+package com.arthur_pereira.mind_cracker_server_api.model;
 
 import com.arthur_pereira.mind_cracker_server_api.data.common.Pair;
 import com.arthur_pereira.mind_cracker_server_api.exception.common.ResourceNotFoundException;
 import com.arthur_pereira.mind_cracker_server_api.mapper.GamePlayerQueueMapper;
-import com.arthur_pereira.mind_cracker_server_api.model.RunningPlayer;
-import com.arthur_pereira.mind_cracker_server_api.model.User;
 import jakarta.persistence.*;
 
 import java.util.*;
 
-@Embeddable
+@Entity
 public class GamePlayers {
-    @Column
+    @Id
+    private Long id;
+
+    @OneToOne
+    private Game game;
+
     @OneToMany(
             cascade = CascadeType.ALL,
-            orphanRemoval = true
+            orphanRemoval = true,
+            mappedBy = "currentGame"
     )
     private List<RunningPlayer> gamePlayers = new ArrayList<>();
 
+    /**
+     * For quick order manipulation on player adding, removing, querying, reversing, etc... the order system is structured by a bidirectional ring, which should be read like: "queriedPlayerId": {playerBeforeId, nextPlayerId}
+     */
     @Convert(converter = GamePlayerQueueMapper.class)
     @Column(columnDefinition = "TEXT")
-    /*For quick order manipulation on player adding, removing, querying, reversing, etc... this structure
-    Is a bidirectional ring, so it should be read like: "queriedPlayerId": {playerBeforeId, nextPlayerId}*/
+
     private Map<Long, Pair<Long, Long>> gamePlayerQueue = new HashMap<>();
 
     @Column
@@ -33,9 +39,10 @@ public class GamePlayers {
     public GamePlayers() {
     }
 
-    /*Using currentPlayerId as the next player assumes that players can't join after the Game
-     started. As of now, it will be kept this way to spare an extra field in DB.
-     If this ever changes, just add a pointer to the first ever joined running player;*/
+    /**Using currentPlayerId as the next player assumes that players can't join after the Game
+     *started. As of now, it will be kept this way to spare an extra field in DB.
+     * If this ever changes, just add a pointer to the first ever joined running player;
+     */
     public void addRunningPlayer(RunningPlayer runningPlayer) {
         if(gamePlayers.isEmpty()) {
             currentPlayerId = runningPlayer.getId();
