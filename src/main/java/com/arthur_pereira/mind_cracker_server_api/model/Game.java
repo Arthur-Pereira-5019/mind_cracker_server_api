@@ -15,7 +15,7 @@ public class Game {
     private Long gameId;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    private GamePlayers gamePlayers;
+    private GamePlayers gamePlayers = new GamePlayers();
 
     @Column
     private String gamePassword = "";
@@ -57,7 +57,7 @@ public class Game {
     @Column
     private int currentRound;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     private RunningPlayer gameConductor;
 
     @Column

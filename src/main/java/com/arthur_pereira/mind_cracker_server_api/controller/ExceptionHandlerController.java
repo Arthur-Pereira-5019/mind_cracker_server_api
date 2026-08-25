@@ -124,6 +124,13 @@ public class ExceptionHandlerController {
                 .body(exceptionResponse);
     }
 
+    @ExceptionHandler(ConcurrentModificationException.class)
+    public final ResponseEntity<ExceptionResult> handleConcurrentModificationException(Exception ex, WebRequest request) {
+        ExceptionResult exceptionResponse = new ExceptionResult(ex.getMessage(), new Date(), request.getDescription(false));
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(exceptionResponse);
+    }
 
 
 }

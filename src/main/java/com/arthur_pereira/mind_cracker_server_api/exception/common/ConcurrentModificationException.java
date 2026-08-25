@@ -1,0 +1,11 @@
+package com.arthur_pereira.mind_cracker_server_api.exception.common;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(HttpStatus.CONFLICT)
+public class ConcurrentModificationException extends RuntimeException {
+    public ConcurrentModificationException(String message) {
+        super(message);
+    }
+}

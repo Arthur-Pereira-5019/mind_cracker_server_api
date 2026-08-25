@@ -10,6 +10,7 @@ import java.util.*;
 @Entity
 public class GamePlayers {
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @OneToOne
@@ -18,9 +19,9 @@ public class GamePlayers {
     @OneToMany(
             cascade = CascadeType.ALL,
             orphanRemoval = true,
-            mappedBy = "currentGame"
+            mappedBy = "gamePlayers"
     )
-    private List<RunningPlayer> gamePlayers = new ArrayList<>();
+    private List<RunningPlayer> runningPlayers = new ArrayList<>();
 
     /**
      * For quick order manipulation on player adding, removing, querying, reversing, etc... the order system is structured by a bidirectional ring, which should be read like: "queriedPlayerId": {playerBeforeId, nextPlayerId}
@@ -44,7 +45,7 @@ public class GamePlayers {
      * If this ever changes, just add a pointer to the first ever joined running player;
      */
     public void addRunningPlayer(RunningPlayer runningPlayer) {
-        if(gamePlayers.isEmpty()) {
+        if(runningPlayers.isEmpty()) {
             currentPlayerId = runningPlayer.getId();
         } else {
             Long semiLastPlayerToJoinId = gamePlayerQueue.get(lastPlayerToJoinId).left();
@@ -53,12 +54,12 @@ public class GamePlayers {
             gamePlayerQueue.put(runningPlayer.getId(),
                     new Pair<>(lastPlayerToJoinId, currentPlayerId));
         }
-        gamePlayers.add(runningPlayer);
+        runningPlayers.add(runningPlayer);
         lastPlayerToJoinId = runningPlayer.getId();
     }
 
     public void removeRunningPlayer(RunningPlayer runningPlayer) {
-        if(!gamePlayers.isEmpty()) {
+        if(!runningPlayers.isEmpty()) {
             Long removedPlayerId = runningPlayer.getId();
             Long playerBeforeId = gamePlayerQueue.get(removedPlayerId).left();
             Long playerSemiBeforeId = gamePlayerQueue.get(playerBeforeId).left();
@@ -69,7 +70,7 @@ public class GamePlayers {
     }
 
     public RunningPlayer getCurrentPlayer() {
-        return gamePlayers.stream().filter(x -> Objects.equals(x.getId(), currentPlayerId)).
+        return runningPlayers.stream().filter(x -> Objects.equals(x.getId(), currentPlayerId)).
                 findFirst().orElseThrow(() -> new ResourceNotFoundException("Unexpected behaviour of " +
                         "the Player Queue, the game must be aborted."));
     }
@@ -83,11 +84,11 @@ public class GamePlayers {
     }
 
     public List<RunningPlayer> getSortedPlayerListByScore() {
-        return gamePlayers.stream().sorted(Comparator.comparing(RunningPlayer::getScore).reversed()).toList();
+        return runningPlayers.stream().sorted(Comparator.comparing(RunningPlayer::getScore).reversed()).toList();
     }
 
     public boolean isUserAPlayer(User user) {
-        return gamePlayers.stream().anyMatch(x -> x.getRelatedUserId().equals(user.getId()));
+        return runningPlayers.stream().anyMatch(x -> x.getRelatedUserId().equals(user.getId()));
     }
 
     public boolean isUserCurrentPlayer(User user) {
@@ -95,10 +96,10 @@ public class GamePlayers {
     }
 
     public void empty() {
-        gamePlayers = new ArrayList<>();
+        runningPlayers = new ArrayList<>();
     }
 
-    public List<RunningPlayer> getGamePlayers() {
-        return gamePlayers;
+    public List<RunningPlayer> getRunningPlayers() {
+        return runningPlayers;
     }
 }

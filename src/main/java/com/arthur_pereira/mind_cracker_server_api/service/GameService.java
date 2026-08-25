@@ -60,24 +60,32 @@ public class GameService {
         }
     }
 
+    @Transactional
     public Game joinGame(JoinGameDTO joinGameDTO, User user) {
         Game game = findGameById(joinGameDTO.gameId());
+        GamePlayers gamePlayers = game.getGamePlayers();
+
         if(game.isStarted()) {
             throw new UnableToJoinGameException("Game has already started.");
         }
         if(!Objects.equals(joinGameDTO.password(), game.getGamePassword())) {
             throw new UnableToJoinGameException("The given password doesn't game the Game actual password.");
         }
+
         user = userService.attemptToJoin(user);
         RunningPlayer runningPlayer = runningPlayerService.createRunningPlayer(user);
-        game.getGamePlayers().addRunningPlayer(runningPlayer);
+        gamePlayers.addRunningPlayer(runningPlayer);
+        game.setGamePlayers(gamePlayers);
         return gameRepository.save(game);
     }
 
+    @Transactional
     public Game leaveGame(Long gameId, User user) {
         Game game = findGameAssuringIsPlayer(gameId, user);
-        game.getGamePlayers().removeRunningPlayer(
+        GamePlayers gamePlayers = game.getGamePlayers();
+        gamePlayers.removeRunningPlayer(
                 runningPlayerService.findPlayerByUserId(user.getId()));
+        game.setGamePlayers(gamePlayers);
         return gameRepository.save(game);
     }
 

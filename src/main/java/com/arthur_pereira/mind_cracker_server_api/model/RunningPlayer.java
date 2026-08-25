@@ -23,6 +23,9 @@ public class RunningPlayer {
     @Column
     private int score = 0;
 
+    @ManyToOne
+    private GamePlayers gamePlayers;
+
     public RunningPlayer() {
     }
 
