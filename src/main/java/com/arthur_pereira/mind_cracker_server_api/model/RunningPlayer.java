@@ -65,7 +65,7 @@ public class RunningPlayer {
         return Objects.hash(id, relatedUserId);
     }
 
-
-
-
+    public void setGamePlayers(GamePlayers gamePlayers) {
+        this.gamePlayers = gamePlayers;
+    }
 }

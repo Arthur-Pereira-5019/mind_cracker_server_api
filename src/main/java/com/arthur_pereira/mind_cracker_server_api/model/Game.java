@@ -15,7 +15,7 @@ public class Game {
     private Long gameId;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    private GamePlayers gamePlayers = new GamePlayers();
+    private GamePlayers gamePlayers;
 
     @Column
     private String gamePassword = "";
@@ -73,6 +73,7 @@ public class Game {
     private ToleratedAnswerConfiguration toleratedAnswerConfiguration;
 
     public Game() {
+        gamePlayers = new GamePlayers(this);
     }
 
     public Game(Deck gameDeck, int gameDeckVersion, String gamePassword, RunningPlayer gameConductor, DeckType gameType, ToleratedAnswerConfiguration toleratedAnswerConfiguration) {
@@ -81,6 +82,8 @@ public class Game {
         this.gamePassword = gamePassword;
         this.gameConductor = gameConductor;
         this.toleratedAnswerConfiguration = toleratedAnswerConfiguration;
+        this.gamePlayers = new GamePlayers(this);
+        gameConductor.setGamePlayers(this.getGamePlayers());
         if(gameType == DeckType.OPTIONAL) {
             throw new DomainException("Game must have a defined type!");
         }

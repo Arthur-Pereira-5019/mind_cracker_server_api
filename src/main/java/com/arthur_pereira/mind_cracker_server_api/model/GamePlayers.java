@@ -13,7 +13,7 @@ public class GamePlayers {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @OneToOne
+    @OneToOne(mappedBy = "gamePlayers")
     private Game game;
 
     @OneToMany(
@@ -40,6 +40,10 @@ public class GamePlayers {
     public GamePlayers() {
     }
 
+    public GamePlayers(Game game) {
+        this.game = game;
+    }
+
     /**Using currentPlayerId as the next player assumes that players can't join after the Game
      *started. As of now, it will be kept this way to spare an extra field in DB.
      * If this ever changes, just add a pointer to the first ever joined running player;
@@ -54,6 +58,7 @@ public class GamePlayers {
             gamePlayerQueue.put(runningPlayer.getId(),
                     new Pair<>(lastPlayerToJoinId, currentPlayerId));
         }
+        runningPlayer.setGamePlayers(this);
         runningPlayers.add(runningPlayer);
         lastPlayerToJoinId = runningPlayer.getId();
     }
