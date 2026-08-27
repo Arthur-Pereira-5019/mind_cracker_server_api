@@ -64,7 +64,6 @@ public class GameService {
     public Game joinGame(JoinGameDTO joinGameDTO, User user) {
         Game game = findGameById(joinGameDTO.gameId());
         GamePlayers gamePlayers = game.getGamePlayers();
-
         if(game.isStarted()) {
             throw new UnableToJoinGameException("Game has already started.");
         }
@@ -81,7 +80,7 @@ public class GameService {
 
     @Transactional
     public Game leaveGame(Long gameId, User user) {
-        Game game = findGameAssuringIsPlayer(gameId, user);
+        Game game = findGameAssuringIsCommonPlayer(gameId, user);
         GamePlayers gamePlayers = game.getGamePlayers();
         gamePlayers.removeRunningPlayer(
                 runningPlayerService.findPlayerByUserId(user.getId()));
@@ -200,13 +199,23 @@ public class GameService {
         return gameRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Couldn't find Game with the provided Id"));
     }
 
-    public Game findGameAssuringIsPlayer(Long gameId, User user) {
+    public Game findGameAssuringIsCommonPlayer(Long gameId, User user) {
         Game game = findGameById(gameId);
         if(game.getGamePlayers().isUserAPlayer(user)) {
             return game;
         }
         throw new UnauthorizedActionException("You aren't a Player of the provided Game.");
     }
+
+    public Game findGameAssuringIsPlayer(Long gameId, User user) {
+        Game game = findGameById(gameId);
+        if(game.getGamePlayers().isUserAPlayer(user) || game.getGameConductor().getRelatedUserId().equals(user.getId())) {
+            return game;
+        }
+        throw new UnauthorizedActionException("You aren't a Player of the provided Game.");
+    }
+
+
 
     public Game findGameAssuringIsCurrentPlayer(Long gameId, User user) {
         Game game = findGameById(gameId);
@@ -222,5 +231,10 @@ public class GameService {
             return game;
         }
         throw new UnauthorizedActionException("You aren't the Conductor of the provided Game.");
+    }
+
+    public List<RunningPlayer> generatePartialOrder(Long gameId, User user) {
+        Game game = findGameAssuringIsPlayer(gameId, user);
+        return game.getGamePlayers().generatePartialOrder();
     }
 }

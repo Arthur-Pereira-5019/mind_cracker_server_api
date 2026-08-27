@@ -24,7 +24,9 @@ public class GamePlayers {
     private List<RunningPlayer> runningPlayers = new ArrayList<>();
 
     /**
-     * For quick order manipulation on player adding, removing, querying, reversing, etc... the order system is structured by a bidirectional ring, which should be read like: "queriedPlayerId": {playerBeforeId, nextPlayerId}
+     * For quick order manipulation on player adding, removing, querying, reversing, etc...
+     * the order system is structured by a bidirectional ring, which should be read like:
+     * "queriedPlayerId": {playerBeforeId, nextPlayerId}
      */
     @Convert(converter = GamePlayerQueueMapper.class)
     @Column(columnDefinition = "TEXT")
@@ -51,6 +53,12 @@ public class GamePlayers {
     public void addRunningPlayer(RunningPlayer runningPlayer) {
         if(runningPlayers.isEmpty()) {
             currentPlayerId = runningPlayer.getId();
+            gamePlayerQueue.put(currentPlayerId,new Pair<>(currentPlayerId,currentPlayerId));
+        } else if(runningPlayers.size() == 2){
+            gamePlayerQueue.put(lastPlayerToJoinId,
+                    new Pair<>(runningPlayer.getId(), runningPlayer.getId()));
+            gamePlayerQueue.put(runningPlayer.getId(),
+                    new Pair<>(lastPlayerToJoinId, lastPlayerToJoinId));
         } else {
             Long semiLastPlayerToJoinId = gamePlayerQueue.get(lastPlayerToJoinId).left();
             gamePlayerQueue.put(lastPlayerToJoinId,
@@ -106,5 +114,20 @@ public class GamePlayers {
 
     public List<RunningPlayer> getRunningPlayers() {
         return runningPlayers;
+    }
+
+    public RunningPlayer getRunningPlayerById(Long id) {
+        return runningPlayers.stream().filter(x -> Objects.equals(x.getId(), id)).toList().getFirst();
+    }
+
+    public List<RunningPlayer> generatePartialOrder() {
+        int depth = gamePlayerQueue.size();
+        Long currentId = currentPlayerId;
+        List<RunningPlayer> partialOrder = new ArrayList<>();
+        for (int i = 0; i < depth; i++) {
+            partialOrder.add(getRunningPlayerById(currentId));
+            currentId = gamePlayerQueue.get(currentId).right();
+        }
+        return partialOrder;
     }
 }

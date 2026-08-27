@@ -12,9 +12,8 @@ public class GameMapper {
     private DeckMapper deckMapper;
 
     public PreGameExhibitionDTO preGameExhibitionDTO(Game game) {
-
         return new PreGameExhibitionDTO(game.getGameId(),
-                game.getGamePlayers().getRunningPlayers(),
+                game.getGamePlayers().generatePartialOrder(),
                 game.isStarted(),
                 deckMapper.mapToDeckExhibitionDTO(game.getGameDeck()),
                 game.getGameConductor(),game.getToleratedAnswerConfiguration()

@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface RunningPlayerRepository extends JpaRepository<RunningPlayer, Long> {
     public Optional<RunningPlayer> findByRelatedUserId(String relatedUserId);
+
 }

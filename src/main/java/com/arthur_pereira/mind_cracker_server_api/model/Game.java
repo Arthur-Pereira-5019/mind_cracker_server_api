@@ -83,7 +83,6 @@ public class Game {
         this.gameConductor = gameConductor;
         this.toleratedAnswerConfiguration = toleratedAnswerConfiguration;
         this.gamePlayers = new GamePlayers(this);
-        gameConductor.setGamePlayers(this.getGamePlayers());
         if(gameType == DeckType.OPTIONAL) {
             throw new DomainException("Game must have a defined type!");
         }
