@@ -34,6 +34,14 @@ public class RunningPlayer {
         this.usertag = usertag;
     }
 
+    public Game getCurrentGame() {
+        return gamePlayers.getGame();
+    }
+
+    public GamePlayers getGamePlayers() {
+        return gamePlayers;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -67,5 +75,9 @@ public class RunningPlayer {
 
     public void setGamePlayers(GamePlayers gamePlayers) {
         this.gamePlayers = gamePlayers;
+    }
+
+    public Usertag getUsertag() {
+        return usertag;
     }
 }

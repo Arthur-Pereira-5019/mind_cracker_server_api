@@ -42,11 +42,15 @@ public class GamePlayers {
     public GamePlayers() {
     }
 
+    public Game getGame() {
+        return game;
+    }
+
     public GamePlayers(Game game) {
         this.game = game;
     }
 
-    /**Using currentPlayerId as the next player assumes that players can't join after the Game
+    /**This method uses currentPlayerId as the next player, which assumes that players can't join after the Game
      *started. As of now, it will be kept this way to spare an extra field in DB.
      * If this ever changes, just add a pointer to the first ever joined running player;
      */
@@ -79,6 +83,8 @@ public class GamePlayers {
             Long nextPlayerId = gamePlayerQueue.get(removedPlayerId).right();
             gamePlayerQueue.put(playerBeforeId,new Pair<>(playerSemiBeforeId,nextPlayerId));
             gamePlayerQueue.remove(removedPlayerId);
+            runningPlayer.setGamePlayers(null);
+            runningPlayers.remove(runningPlayer);
         }
     }
 

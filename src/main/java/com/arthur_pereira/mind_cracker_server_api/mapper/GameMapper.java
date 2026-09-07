@@ -11,12 +11,17 @@ public class GameMapper {
     @Autowired
     private DeckMapper deckMapper;
 
+    @Autowired
+    private RunningPlayerMapper runningPlayerMapper;
+
     public PreGameExhibitionDTO preGameExhibitionDTO(Game game) {
-        return new PreGameExhibitionDTO(game.getGameId(),
-                game.getGamePlayers().generatePartialOrder(),
+        return new PreGameExhibitionDTO(
+                game.getGameId(),
+                runningPlayerMapper.runningPlayerSimpleExhibitionDTOPreGameList(game.getGamePlayers().generatePartialOrder()),
                 game.isStarted(),
                 deckMapper.mapToDeckExhibitionDTO(game.getGameDeck()),
-                game.getGameConductor(),game.getToleratedAnswerConfiguration()
+                runningPlayerMapper.runningPlayerSimpleExhibitionDTO(game.getGameConductor()),
+                game.getToleratedAnswerConfiguration()
         );
     }
 

@@ -49,8 +49,8 @@ public class GameService {
         try {
             Deck deck = deckService.findDeckById(createGameDTO.gameDeckId());
             deck.simulateLoading(createGameDTO.gameType());
-            userService.attemptToJoin(user);
-            RunningPlayer conductor = runningPlayerService.createRunningPlayer(user);
+            userService.startPlaying(user);
+            RunningPlayer conductor = new RunningPlayer(user.getId(), user.getUsertag());
             Game game = new Game(deck, 0, createGameDTO.gamePassword(), conductor,
                     createGameDTO.gameType(), createGameDTO.toleratedAnswerConfiguration());
             return gameRepository.save(game);
@@ -71,7 +71,7 @@ public class GameService {
             throw new UnableToJoinGameException("The given password doesn't game the Game actual password.");
         }
 
-        user = userService.attemptToJoin(user);
+        user = userService.startPlaying(user);
         RunningPlayer runningPlayer = runningPlayerService.createRunningPlayer(user);
         gamePlayers.addRunningPlayer(runningPlayer);
         game.setGamePlayers(gamePlayers);
@@ -79,12 +79,13 @@ public class GameService {
     }
 
     @Transactional
-    public Game leaveGame(Long gameId, User user) {
-        Game game = findGameAssuringIsCommonPlayer(gameId, user);
-        GamePlayers gamePlayers = game.getGamePlayers();
-        gamePlayers.removeRunningPlayer(
-                runningPlayerService.findPlayerByUserId(user.getId()));
+    public Game leaveGame(User user) {
+        RunningPlayer runningPlayer = runningPlayerService.findPlayerByUserId(user.getId());
+        Game game = runningPlayer.getCurrentGame();
+        GamePlayers gamePlayers = runningPlayer.getGamePlayers();
+        gamePlayers.removeRunningPlayer(runningPlayer);
         game.setGamePlayers(gamePlayers);
+        userService.stopPlaying(user);
         return gameRepository.save(game);
     }
 

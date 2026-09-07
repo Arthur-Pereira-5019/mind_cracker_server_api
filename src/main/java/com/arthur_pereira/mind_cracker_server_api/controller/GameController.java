@@ -9,6 +9,7 @@ import com.arthur_pereira.mind_cracker_server_api.model.User;
 import com.arthur_pereira.mind_cracker_server_api.service.GameService;
 import com.arthur_pereira.mind_cracker_server_api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,10 +25,14 @@ public class GameController {
     @Autowired
     private GameMapper gameMapper;
 
+    @GetMapping("/get/{id}")
+    public PreGameExhibitionDTO getGameData(@PathVariable Long id, @AuthenticationPrincipal User user) {
+        return gameMapper.preGameExhibitionDTO(gameService.findGameAssuringIsPlayer(id, user));
+    }
+
     @PostMapping("/create")
     public PreGameExhibitionDTO createGame(@RequestBody CreateGameDTO createGameDTO, @AuthenticationPrincipal User user) {
         return gameMapper.preGameExhibitionDTO(gameService.createGame(createGameDTO, user));
-
     }
 
     @PostMapping("/join")
@@ -36,8 +41,9 @@ public class GameController {
     }
 
     @PostMapping("/leave")
-    public Game leaveGame(Long gameID, @AuthenticationPrincipal User user) {
-        return gameService.leaveGame(gameID, user);
+    public ResponseEntity<?> leaveGame(@AuthenticationPrincipal User user) {
+        gameService.leaveGame(user);
+        return ResponseEntity.ok("Successfully left the game.");
     }
 
     @PutMapping("/next_player")

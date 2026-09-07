@@ -39,6 +39,7 @@ public class ExceptionHandlerController {
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<ExceptionResult> handleAllExceptions(Exception ex, WebRequest request) {
         ExceptionResult exceptionResponse = new ExceptionResult(ex.getMessage(), new Date(), request.getDescription(false));
+        ex.printStackTrace();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(exceptionResponse);

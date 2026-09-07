@@ -57,7 +57,7 @@ public class UserService implements UserDetailsService {
         userRepository.markEveryUserOfAGameAsNotPlaying(gameId);
     }
 
-    public User attemptToJoin(User user) {
+    public User startPlaying(User user) {
         if(user.isPlaying()) {
             throw new UnableToJoinGameException("Already on a Game.");
         }
@@ -65,6 +65,11 @@ public class UserService implements UserDetailsService {
             throw new UnauthorizedActionException("Can't play while suspended");
         }
         user.setPlaying(true);
+        return userRepository.save(user);
+    }
+
+    public User stopPlaying(User user) {
+        user.setPlaying(false);
         return userRepository.save(user);
     }
 
