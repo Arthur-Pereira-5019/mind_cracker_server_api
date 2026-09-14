@@ -50,7 +50,7 @@ public class GameService {
             Deck deck = deckService.findDeckById(createGameDTO.gameDeckId());
             deck.simulateLoading(createGameDTO.gameType());
             userService.startPlaying(user);
-            RunningPlayer conductor = new RunningPlayer(user.getId(), user.getUsertag());
+            Conductor conductor = new Conductor(user);
             Game game = new Game(deck, 0, createGameDTO.gamePassword(), conductor,
                     createGameDTO.gameType(), createGameDTO.toleratedAnswerConfiguration());
             return gameRepository.save(game);
@@ -80,13 +80,25 @@ public class GameService {
 
     @Transactional
     public Game leaveGame(User user) {
-        RunningPlayer runningPlayer = runningPlayerService.findPlayerByUserId(user.getId());
-        Game game = runningPlayer.getCurrentGame();
-        GamePlayers gamePlayers = runningPlayer.getGamePlayers();
-        gamePlayers.removeRunningPlayer(runningPlayer);
-        game.setGamePlayers(gamePlayers);
-        userService.stopPlaying(user);
-        return gameRepository.save(game);
+        GenericPlayingUser playingUser = user.getPlayingUser();
+        if(playingUser == null) {
+            throw new ResourceNotFoundException("User isn't associated with any player");
+        }
+        Game game = playingUser.getAssociatedGame();
+        if(playingUser instanceof Conductor) {
+            if(game.getGameConductor() == playingUser) {
+                gameRepository.delete(game);
+                return gameRepository.save(game);
+            }
+        }
+        if(playingUser instanceof RunningPlayer runningPlayer) {
+            GamePlayers gamePlayers = runningPlayer.getGamePlayers();
+            gamePlayers.removeRunningPlayer(runningPlayer);
+            game.setGamePlayers(gamePlayers);
+            userService.stopPlaying(user);
+            return gameRepository.save(game);
+        }
+        throw new RuntimeException("Internal server error: Mismatched running player type");
     }
 
     public Game goToNextPlayer(Long gameId, User conductor) {

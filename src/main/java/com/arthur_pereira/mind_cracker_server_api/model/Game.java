@@ -58,7 +58,7 @@ public class Game {
     private int currentRound;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    private RunningPlayer gameConductor;
+    private Conductor gameConductor;
 
     @Column
     private boolean started = false;
@@ -76,11 +76,12 @@ public class Game {
         gamePlayers = new GamePlayers(this);
     }
 
-    public Game(Deck gameDeck, int gameDeckVersion, String gamePassword, RunningPlayer gameConductor, DeckType gameType, ToleratedAnswerConfiguration toleratedAnswerConfiguration) {
+    public Game(Deck gameDeck, int gameDeckVersion, String gamePassword, Conductor gameConductor, DeckType gameType, ToleratedAnswerConfiguration toleratedAnswerConfiguration) {
         this.gameDeck = gameDeck;
         this.gameDeckVersion = gameDeckVersion;
         this.gamePassword = gamePassword;
         this.gameConductor = gameConductor;
+        gameConductor.setAssociatedGame(this);
         this.toleratedAnswerConfiguration = toleratedAnswerConfiguration;
         this.gamePlayers = new GamePlayers(this);
         if(gameType == DeckType.OPTIONAL) {
@@ -153,7 +154,7 @@ public class Game {
         this.gamePlayers = gamePlayers;
     }
 
-    public RunningPlayer getGameConductor() {
+    public Conductor getGameConductor() {
         return gameConductor;
     }
 

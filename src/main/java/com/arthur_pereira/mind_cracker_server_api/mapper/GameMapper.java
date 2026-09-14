@@ -17,10 +17,10 @@ public class GameMapper {
     public PreGameExhibitionDTO preGameExhibitionDTO(Game game) {
         return new PreGameExhibitionDTO(
                 game.getGameId(),
-                runningPlayerMapper.runningPlayerSimpleExhibitionDTOPreGameList(game.getGamePlayers().generatePartialOrder()),
+                runningPlayerMapper.genericPlayingUserSimpleExhibitionDTOPreGameList(game.getGamePlayers().generatePartialOrder()),
                 game.isStarted(),
                 deckMapper.mapToDeckExhibitionDTO(game.getGameDeck()),
-                runningPlayerMapper.runningPlayerSimpleExhibitionDTO(game.getGameConductor()),
+                runningPlayerMapper.genericPlayingUserSimpleExhibitionDTOPreGame(game.getGameConductor()),
                 game.getToleratedAnswerConfiguration()
         );
     }

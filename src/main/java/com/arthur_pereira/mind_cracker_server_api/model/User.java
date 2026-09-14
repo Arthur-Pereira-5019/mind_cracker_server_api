@@ -36,6 +36,9 @@ public class User implements UserDetails {
     private boolean playing = false;
 
     @Column
+    private GenericPlayingUser playingUser = null;
+
+    @Column
     @Enumerated(value = EnumType.STRING)
     private UserRole userRole = UserRole.USER;
 
@@ -98,6 +101,10 @@ public class User implements UserDetails {
 
     public void promoteTo(UserRole userRole) {
         this.userRole = userRole;
+    }
+
+    public GenericPlayingUser getPlayingUser() {
+        return playingUser;
     }
 
     @Override

@@ -1,18 +1,18 @@
 package com.arthur_pereira.mind_cracker_server_api.mapper;
 
 import com.arthur_pereira.mind_cracker_server_api.dto.running_player.RunningPlayerSimpleExhibitionDTOPreGame;
-import com.arthur_pereira.mind_cracker_server_api.model.RunningPlayer;
+import com.arthur_pereira.mind_cracker_server_api.model.GenericPlayingUser;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class RunningPlayerMapper {
-    public RunningPlayerSimpleExhibitionDTOPreGame runningPlayerSimpleExhibitionDTO(RunningPlayer runningPlayer) {
-        return new RunningPlayerSimpleExhibitionDTOPreGame(runningPlayer.getId(), runningPlayer.getUsertag());
+    public RunningPlayerSimpleExhibitionDTOPreGame genericPlayingUserSimpleExhibitionDTOPreGame(GenericPlayingUser genericPlayingUser) {
+        return new RunningPlayerSimpleExhibitionDTOPreGame(genericPlayingUser.getId(), genericPlayingUser.getUsertag());
     }
 
-    public List<RunningPlayerSimpleExhibitionDTOPreGame> runningPlayerSimpleExhibitionDTOPreGameList(List<RunningPlayer> runningPlayers) {
-        return runningPlayers.stream().map(this::runningPlayerSimpleExhibitionDTO).toList();
+    public List<RunningPlayerSimpleExhibitionDTOPreGame> genericPlayingUserSimpleExhibitionDTOPreGameList(List<? extends GenericPlayingUser> genericPlayingUsers) {
+        return genericPlayingUsers.stream().map(this::genericPlayingUserSimpleExhibitionDTOPreGame).toList();
     }
 }
