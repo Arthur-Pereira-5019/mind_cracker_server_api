@@ -16,7 +16,7 @@ public class RunningPlayerService {
     private UserService userService;
 
     public RunningPlayer createRunningPlayer (User user) {
-        RunningPlayer runningPlayer = new RunningPlayer(user.getId(), user.getUsertag());
+        RunningPlayer runningPlayer = new RunningPlayer(user);
         return runningPlayerRepository.save(runningPlayer);
     }
 

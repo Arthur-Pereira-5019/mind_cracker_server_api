@@ -5,19 +5,22 @@ import jakarta.persistence.*;
 
 import java.util.Objects;
 
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class GenericPlayingUser {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(unique = true)
+    @OneToOne
+    @JoinColumn(name = "user_id", unique = true)
     private User originalUser;
 
     public GenericPlayingUser() {
     }
 
     public GenericPlayingUser(User originalUser) {
+        originalUser.setPlayingUser(this);
         this.originalUser = originalUser;
     }
 

@@ -35,7 +35,7 @@ public class User implements UserDetails {
     @Column
     private boolean playing = false;
 
-    @Column
+    @OneToOne(mappedBy = "originalUser")
     private GenericPlayingUser playingUser = null;
 
     @Column
@@ -105,6 +105,10 @@ public class User implements UserDetails {
 
     public GenericPlayingUser getPlayingUser() {
         return playingUser;
+    }
+
+    public void setPlayingUser(GenericPlayingUser playingUser) {
+        this.playingUser = playingUser;
     }
 
     @Override
